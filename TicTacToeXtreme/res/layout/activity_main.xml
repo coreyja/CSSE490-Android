@@ -559,7 +559,6 @@
         android:layout_height="35dp"
         android:layout_below="@+id/button32"
         android:layout_toLeftOf="@+id/button33"
-        android:background="@color/X_button"
         android:text="@string/Empty_String" />
 
     <Button
@@ -569,7 +568,6 @@
         android:layout_height="35dp"
         android:layout_alignLeft="@+id/button33"
         android:layout_below="@+id/button33"
-        android:background="@color/X_button"
         android:text="@string/Empty_String" />
 
     <Button
@@ -579,7 +577,6 @@
         android:layout_height="35dp"
         android:layout_below="@+id/button34"
         android:layout_toLeftOf="@+id/button35"
-        android:background="@color/X_button"
         android:text="@string/Empty_String" />
 
     <Button
@@ -640,7 +637,6 @@
         android:layout_height="35dp"
         android:layout_below="@+id/button23"
         android:layout_toLeftOf="@+id/button24"
-        android:background="@color/O_button"
         android:text="@string/Empty_String" />
 
     <Button
@@ -650,7 +646,6 @@
         android:layout_height="35dp"
         android:layout_below="@+id/button24"
         android:layout_toLeftOf="@+id/button25"
-        android:background="@color/O_button"
         android:text="@string/Empty_String" />
 
     <Button
@@ -660,7 +655,6 @@
         android:layout_height="35dp"
         android:layout_below="@+id/button24"
         android:layout_toRightOf="@+id/button24"
-        android:background="@color/O_button"
         android:text="@string/Empty_String" />
 
     <Button
@@ -696,20 +690,12 @@
         android:layout_below="@+id/button29" />
 
     <Button
-        android:id="@+id/New_Game_Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/New_Game_String" />
-
-    <Button
         android:id="@+id/Exit_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button97"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/button99"
+        android:layout_toRightOf="@+id/textView1"
         android:text="@string/Exit_String" />
 
     <TextView
@@ -731,5 +717,15 @@
         android:layout_alignBottom="@+id/button13"
         android:layout_toLeftOf="@+id/button13"
         android:text="@string/Empty_String" />
+
+    <Button
+        android:id="@+id/New_Game_Button"
+        style="@style/AppTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/button92"
+        android:text="@string/New_Game_String" />
 
 </RelativeLayout>
