@@ -56,7 +56,8 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:text="@string/Empty_String" />
+            android:text="@string/Empty_String"
+            android:clickable="false" />
         <Button
             android:id="@+id/button01"
             style="?android:attr/buttonStyleSmall"

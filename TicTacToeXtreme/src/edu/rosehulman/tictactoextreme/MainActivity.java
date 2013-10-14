@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
             for (int j = 0; j < 9; j++){
                 this.mButtons[i][j] = (Button) findViewById(BUTTON_IDS[i][j]);
                 this.mButtons[i][j].setText(R.string.Empty_String);
+//                this.mButtons[i][j].setHighlightColor(getResources().getColor(R.color.button_color));
                 this.mButtons[i][j].setOnClickListener(this);
             }
         }
@@ -82,7 +83,15 @@ public class MainActivity extends Activity implements OnClickListener {
                     this.mButtons[i][j].setText(R.string.X_string);
                     this.mButtons[i][j].setClickable(false);
 
-                    return;
+
+                }
+            }
+        }
+
+        if (isWinner()){
+            for (int i = 0; i < 9; i++){
+                for (int j = 0; j <9; j++){
+                    this.mButtons[i][j].setClickable(false);
                 }
             }
         }
@@ -91,14 +100,76 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	}
 
-	private boolean isWinner() {
-		return false;
-	}
+    private boolean isWinner() {
+        // check rows
+        for(int i = 0; i < 9;i++){
+            for (int j = 0; j < 7; j++){
+                if (isOccupied(this.mButtons[i][j]) && isOccupied(this.mButtons[i][j+1]) && isOccupied(this.mButtons[i][j+2]) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i][j+1].getText()) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i][j+2].getText()) ){
+
+                    this.mButtons[i][j].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i][j+1].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i][j+2].setBackgroundColor(getResources().getColor(R.color.X_button));
+
+                    return true;
+                }
+            }
+        }
+
+        // check columns
+        for(int i = 0; i < 7;i++){
+            for (int j = 0; j < 9; j++){
+                if (isOccupied(this.mButtons[i][j]) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i+1][j].getText()) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i+2][j].getText()) ){
+
+                    this.mButtons[i][j].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i+1][j].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i+2][j].setBackgroundColor(getResources().getColor(R.color.X_button));
+
+                    return true;
+                }
+            }
+        }
 
 
-	private boolean isOccupied(Button button) {
-		return false;
+        //check diagonals
+        for(int i = 0; i < 7;i++){
+            for (int j = 0; j < 7; j++){
+                if (isOccupied(this.mButtons[i][j]) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i+1][j+1].getText()) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i+2][j+2].getText()) ){
 
-	}
+                    this.mButtons[i][j].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i+1][j+1].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i+2][j+2].setBackgroundColor(getResources().getColor(R.color.X_button));
+
+                    return true;
+                }
+            }
+        }
+        for(int i = 2; i < 9;i++){
+            for (int j = 0; j < 7; j++){
+                if (isOccupied(this.mButtons[i][j]) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i-1][j+1].getText()) &&
+                        this.mButtons[i][j].getText().equals(this.mButtons[i-2][j+2].getText()) ){
+
+                    this.mButtons[i][j].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i-1][j+1].setBackgroundColor(getResources().getColor(R.color.X_button));
+                    this.mButtons[i-2][j+2].setBackgroundColor(getResources().getColor(R.color.X_button));
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isOccupied(Button button) {
+        return !button.isClickable();
+
+    }
 
 }

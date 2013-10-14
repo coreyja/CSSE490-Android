@@ -6,4 +6,6 @@
     <color name="X_button">#00FAD9</color>
     <color name="O_button">#F56E6E</color>
 
+    <color name="button_background">#00FFFFFF</color>
+
 </resources>
