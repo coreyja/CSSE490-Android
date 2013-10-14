@@ -10,7 +10,7 @@
     <string name="Exit_String">Exit</string>
     <string name="Player_X_scored">Player X Scored!</string>
     <string name="Player_O_scored">Player O Scored!</string>
-    <string name="Mystery_PowerUp_String">/?</string>
+    <string name="Mystery_PowerUp_String">??</string>
     <string name="Empty_String"/>
     <string name="Player_X_Turn">Player Xs Turn</string>
     <string name="Player_O_Turn">Player Os Turn</string>
