@@ -2,10 +2,6 @@
 <resources>
  
     <color name="background">#CBFCAC</color>
-    <color name="button_color">#020203</color>
-    <color name="X_button">#00FAD9</color>
-    <color name="O_button">#F56E6E</color>
 
-    <color name="button_background">#00FFFFFF</color>
 
 </resources>

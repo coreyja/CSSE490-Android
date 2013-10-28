@@ -4,15 +4,6 @@
     <string name="app_name">TicTacToeXtreme</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="X_string">X</string>
-    <string name="O_String">O</string>
-    <string name="New_Game_String">New Game</string>
-    <string name="Exit_String">Exit</string>
-    <string name="Player_X_scored">Player X Scored!</string>
-    <string name="Player_O_scored">Player O Scored!</string>
-    <string name="Mystery_PowerUp_String">\?\?</string>
-    <string name="Empty_String"/>
-    <string name="Player_X_Turn">Player Xs Turn</string>
-    <string name="Player_O_Turn">Player Os Turn</string>
+
 
 </resources>
