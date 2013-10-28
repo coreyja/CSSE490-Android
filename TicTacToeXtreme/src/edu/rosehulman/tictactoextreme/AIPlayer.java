@@ -20,8 +20,8 @@ public class AIPlayer extends Player{
         int[] heights = this.game.getColHeights();
 
         ArrayList<Integer> options = new ArrayList<Integer>();
-        for (int i:heights){
-            if (i < 9){
+        for (int i = 0; i < 9; i++){
+            if (heights[i] < 9){
                 options.add(i);
             }
         }

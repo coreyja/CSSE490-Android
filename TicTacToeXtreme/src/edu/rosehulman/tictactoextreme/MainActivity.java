@@ -195,11 +195,14 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
     @Override
     public void onCellChange(int row, int col, char newSymbol) {
         // TODO: Add animation of symbol falling down col here.
-        // Note: May not be able to add this animtion here since this is called on each update.
+        // Note: May not be able to add this animation here since this is called on each update.
         // For example when using a bomb, symbols are deleted and this is called multiple times
 
         // Set the referenced cell to the new symbol
         this.textViewGrid[row][col].setText(String.valueOf(newSymbol));
+
+        //After any cell changes update the column buttons
+        this.updateColumnButtons();
     }
 
     @Override
@@ -210,7 +213,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
     @Override
     public void onPlayerTurnEnd(Player p) {
-        //Nothing needs to be updated so leave empty.
+        // Nothing needs to be done here yet
     }
 
     @Override
@@ -218,7 +221,6 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         // TODO: Actually do something more helpful. Gradually getting better. Probably good right now
         String winnerName = winner.getName();
         String result = String.format("%s won!", winnerName);
-        Log.d(TAG, result);
 
         // Disable all the buttons
         for (ImageButton b : columnButtons){
@@ -283,14 +285,29 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         }
     }
 
-    private void enableColumnButtons(){
-        for (ImageButton b: columnButtons){
-            b.setEnabled(true);
+    private void updateColumnButtons(){
+        int[] heights = this.game.getColHeights();
+
+        for (int i = 0; i < 9; i++){
+            if (heights[i] < 9){
+                columnButtons[i].setEnabled(true);
+            } else {
+                columnButtons[i].setEnabled(false);
+            }
         }
     }
 
     private void openNewGameDialog() {
         new NewGameDialog().show(getFragmentManager(), TAG);
+    }
+
+    private void initNewGame() {
+        //Do all the things needed when we create a new game
+
+        this.refreshGrid();
+        this.updatePlayerStatus();
+        this.updateColumnButtons();
+        this.game.getCurrentPlayer().takeTurn();
     }
 
     private class NewGameDialog extends DialogFragment {
@@ -357,10 +374,8 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
                         }
                     }
 
-                    // After creating new Game with new players refresh the Grid and the player status
-                    MainActivity.this.refreshGrid();
-                    MainActivity.this.updatePlayerStatus();
-                    MainActivity.this.enableColumnButtons();
+                    // After creating new Game with new players refresh the Grid and the player status. All in one func now
+                    MainActivity.this.initNewGame();
 
                     // At the end dismiss the dialog
                     dialog.dismiss();

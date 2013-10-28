@@ -240,11 +240,11 @@ public class Game {
         // Set the row based off the column height and the max columns
         int row = this.grid.length - this.getColumnHeight(col) -1;
 
-        // Set the symbol to that of this player
-        this.setSymbolAtPosition(row, col, symbol);
-
         // Increment height pointer
         this.incrementColumnHeight(col);
+
+        // Set the symbol to that of this player
+        this.setSymbolAtPosition(row, col, symbol);
 
 
         //Check if there is a winner from this play
