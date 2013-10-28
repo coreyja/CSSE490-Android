@@ -1,5 +1,7 @@
 package edu.rosehulman.tictactoextreme;
 
+import android.graphics.Point;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -26,6 +28,8 @@ public class Game {
 
     // Boolean for keeping track of whether the game is won without have to check every time
     private boolean isGameWon = false;
+
+    private Point[] winningCells;
 
     // Will be MainActivity. Used to pass information needed to update display
     private OnGameChangeListener gameChangeListener;
@@ -266,11 +270,16 @@ public class Game {
     public Player getWinner(){
         // TODO: Make this more efficient. This is really bad right now
 
+        winningCells = new Point[3];
+
         // Check for 3 in same row
         for (int i = 0; i < grid.length-2; i++){
             for (int j = 0; j < grid[0].length; j++){
                 // '\u0000' is the default value for a java char. If the value is this, there is no real symbol there
                 if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i+1][j] && this.grid[i][j] == this.grid[i+2][j]){
+                    winningCells[0] = new Point(i,j);
+                    winningCells[1] = new Point(i+1,j);
+                    winningCells[2] = new Point(i+2,j);
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
@@ -280,6 +289,9 @@ public class Game {
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length-2; j++){
                 if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i][j+1] && this.grid[i][j] == this.grid[i][j+2]){
+                    winningCells[0] = new Point(i,j);
+                    winningCells[1] = new Point(i,j+1);
+                    winningCells[2] = new Point(i,j+2);
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
@@ -289,6 +301,9 @@ public class Game {
         for (int i = 0; i < grid.length-2; i++){
             for (int j = 0; j < grid[0].length-2; j++){
                 if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i+1][j+1] && this.grid[i][j] == this.grid[i+2][j+2]){
+                    winningCells[0] = new Point(i,j);
+                    winningCells[1] = new Point(i+1,j+1);
+                    winningCells[2] = new Point(i+2,j+2);
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
@@ -299,17 +314,25 @@ public class Game {
         for (int i = grid.length-1; i >= 2; i--){
             for (int j = 0; j < grid[0].length-2; j++){
                 if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i-1][j+1] && this.grid[i][j] == this.grid[i-2][j+2]){
+                    winningCells[0] = new Point(i,j);
+                    winningCells[1] = new Point(i-1,j+1);
+                    winningCells[2] = new Point(i-2,j+2);
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
         }
 
+        winningCells = null;
         return null;
     }
 
     public boolean isGameWon(){
         //Return the boolean that we are storing
         return this.isGameWon;
+    }
+
+    public Point[] getWinningCells() {
+        return this.winningCells;
     }
 
     /****** Simple Util Methods ******/

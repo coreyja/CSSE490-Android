@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -238,6 +239,8 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         // Update the player status text since the game is won
         this.updatePlayerStatus();
+
+        this.highlightWinningCells();
     }
 
     @Override
@@ -289,6 +292,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++){
                 this.textViewGrid[i][j].setText(String.valueOf(charGrid[i][j]));
+                this.textViewGrid[i][j].setBackgroundResource(R.color.gridTextViewBackground);
             }
         }
     }
@@ -307,6 +311,15 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
     private void openNewGameDialog() {
         new NewGameDialog().show(getFragmentManager(), TAG);
+    }
+
+    private void highlightWinningCells() {
+        Point[] cells = this.game.getWinningCells();
+
+        if (cells != null)
+            for (Point p:cells){
+                this.textViewGrid[p.x][p.y].setBackgroundResource(R.color.yellow);
+            }
     }
 
     private void initNewGame() {
