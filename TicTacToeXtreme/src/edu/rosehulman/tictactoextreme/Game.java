@@ -23,8 +23,12 @@ public class Game {
     // 0 means the col is empty
     private int[] colHeight;
 
+    // Boolean for keeping track of whether the game is won without have to check every time
+    private boolean isGameWon = false;
+
     // Will be MainActivity. Used to pass information needed to update display
     private OnGameChangeListener gameChangeListener;
+
 
     // Players will not be added at construct time since Players need Game to be constructed
     public Game(OnGameChangeListener listener){
@@ -55,7 +59,7 @@ public class Game {
         return this.players.peek();
     }
 
-    public boolean currentPlayerIsHuman(){
+    public boolean isCurrentPlayerHuman(){
         // Returns true if the current player is a human
         return (this.getCurrentPlayer() instanceof HumanPlayer);
     }
@@ -63,6 +67,10 @@ public class Game {
     // Pop the next Player off the queue and re-add them so they go to the end
     // Call the needed OnGameChangeListener method
     public void endCurrentPlayerTurn() {
+
+        // If the game is over don't do anything
+        if (isGameWon()) return;
+
         // Pop off the queue
         Player old = this.players.poll();
 
@@ -81,7 +89,7 @@ public class Game {
         return this.grid;
     }
 
-    // Will return null if symbol does not exist if grid
+    // Will return '\u0000' if symbol does not exist in grid
     public char getSymbolFromGrid(int row, int col){
         if (!isValidColumn(col)){
             throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
@@ -159,8 +167,9 @@ public class Game {
         this.incrementColumnHeight(col);
 
         // Check if someone has won and call the related listener method
-        Player winner = this.getGameWinner();
+        Player winner = this.getWinner();
         if (winner != null){
+            this.isGameWon = true;
             this.gameChangeListener.onGameWon(winner);
         }
 
@@ -169,7 +178,7 @@ public class Game {
 
     // Returns which Player won the game
     // Returns null if no-one won
-    private Player getGameWinner(){
+    public Player getWinner(){
         // TODO: Make this more efficient. This is really bad right now
 
         // Check for 3 in same row
@@ -214,11 +223,8 @@ public class Game {
     }
 
     public boolean isGameWon(){
-        // Get the winning player, or null if no-one has won
-        Player winner = this.getGameWinner();
-
-        // Return true if the winner is not null, and false if the winner is null
-        return winner != null;
+        //Return the boolean that we are storing
+        return this.isGameWon;
     }
 
     /****** Simple Util Methods ******/

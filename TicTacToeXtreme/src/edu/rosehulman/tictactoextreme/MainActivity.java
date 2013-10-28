@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener, OnGameChangeListener {
 
@@ -26,6 +25,8 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
     // Holds the dynamically generated buttons for Player choosing move
     private Button[] columnButtons;
 
+    private TextView playerStatusText;
+
     // Game object
     private Game game;
 
@@ -34,8 +35,17 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+        // TODO: Change below to add a way to ask user for number of players
+        game = new Game(this);
+        game.addPlayer(new HumanPlayer(game, "Player 1", 'X'));
+        game.addPlayer(new HumanPlayer(game, "Player 2", 'O'));
+
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+
+        // Find player status text view and update it to be what it should start as
+        playerStatusText = (TextView) findViewById(R.id.player_status_text);
+        this.updatePlayerStatusText();
 
         // Init the TextView matrix
         textViewGrid = new TextView[9][9];
@@ -76,10 +86,6 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             buttonRow.addView(temp);
         }
 
-        // TODO: Change below to add a way to ask user for number of players
-        game = new Game(this);
-        game.addPlayer(new HumanPlayer(game, "Player 1", 'X'));
-        game.addPlayer(new HumanPlayer(game, "Player 2", 'O'));
 	}
 
 
@@ -101,7 +107,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         // Check if it was one of the column buttons. But only if the current player is human
         // If current player isn't human, we can ignore any clicks on these buttons
-        if (game.currentPlayerIsHuman()){
+        if (game.isCurrentPlayerHuman()){
             for (int i = 0; i < columnButtons.length; i++){
                 if ( ((Button)v) == columnButtons[i] ){
                     try {
@@ -122,22 +128,21 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         }
 
 
-
 	}
 
 
     @Override
     public void onCellChange(int row, int col, char newSymbol) {
+        // TODO: Add animation of symbol falling down col here
+
         // Set the referenced cell to the new symbol
         this.textViewGrid[row][col].setText(String.valueOf(newSymbol));
     }
 
     @Override
     public void onPlayerTurnStart(Player p) {
-        // TODO: Add player indicator to view and update it here
-
-        String message = String.format("%s\'s Turn!", p.getName());
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        // Just call the method to update the Player Status text
+        this.updatePlayerStatusText();
     }
 
     @Override
@@ -147,15 +152,32 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
     @Override
     public void onGameWon(Player winner) {
-        // TODO: Actually do something. For now just log and toast and disable buttons
+        // TODO: Actually do something more helpful. Gradually getting better. Probably good right now
         String winnerName = winner.getName();
-        String result = String.format("Player %s won!", winnerName);
+        String result = String.format("%s won!", winnerName);
         Log.d(TAG, result);
 
-        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-
+        // Disable all the buttons
         for (Button b : columnButtons){
             b.setEnabled(false);
         }
+
+        // Update the player status text since the game is won
+        this.updatePlayerStatusText();
+    }
+
+    private void updatePlayerStatusText(){
+        String message;
+
+        if (game.isGameWon()){
+            Player winner = this.game.getWinner();
+            message = String.format("%s won!", winner.getName());
+        } else {
+            Player cur = game.getCurrentPlayer();
+
+            message = String.format("%s\'s Turn!", cur.getName());
+        }
+
+        this.playerStatusText.setText(message);
     }
 }
