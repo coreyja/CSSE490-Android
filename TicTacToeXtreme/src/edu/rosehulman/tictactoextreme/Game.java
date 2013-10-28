@@ -22,24 +22,27 @@ public class Game {
     // 0 means the col is empty
     private int[] colHeight;
 
-    public Game(Player[] playerArray){
+    // Will be MainActivity. Used to pass information needed to update display
+    private OnGameChangeListener gameChangeListener;
+
+    public Game(Player[] playerArray, OnGameChangeListener listener){
         //Add all the players to the Queue
         for (Player p: playerArray){
             this.players.add(p);
         }
+
+        // Save the listener
+        this.gameChangeListener = listener;
 
         // Init the grid
         this.grid = new char[9][9];
 
         // Init height counters
         this.colHeight = new int[9];
-        Arrays.fill(colHeight, 0); // Most likely inited to 0, but to make sure. Also, most likely not anymore efficient than a loop, but could be optimized somehow
-    }
 
-    public Game() {
-        //Default constructor should only be used for testing and development
-
-        //Need to add 1 or 2 Humans once I get that written so I can dev easier
+        // Most likely inited to 0, but to make sure.
+        // Also, Arrays.fill is most likely not anymore efficient than a loop, but could be optimized somehow internally
+        Arrays.fill(colHeight, 0);
     }
 
     public Player getCurrentPlayer(){
@@ -47,11 +50,21 @@ public class Game {
         return this.players.peek();
     }
 
+    // Pop the next Player off the queue and re-add them so they go to the end
+    // Call the needed OnGameChangeListener method
     public void endCurrentPlayerTurn() {
-        // Pop the next Player off the queue and re-add them so they go to the end
-        this.players.add(this.players.poll());
-    }
+        // Pop off the queue
+        Player old = this.players.poll();
 
+        // Call game change listener for turn end
+        this.gameChangeListener.onPlayerTurnEnd(old);
+
+        // Add back onto the queue for their next turn
+        this.players.add(old);
+
+        // Call game change listener for turn start
+        this.gameChangeListener.onPlayerTurnStart(this.getCurrentPlayer());
+    }
 
     // Simple getter for entire character grid.
     public char[][] getCharacterGrid(){
@@ -102,8 +115,13 @@ public class Game {
             // If queue is empty, NoPlayersInGameException will be thrown instead
         }
 
+        //End this players turn
+        this.endCurrentPlayerTurn();
+
     }
 
+    // This method CAN be used for players who aren't the current player.
+    // As such doesn't change the order of the players queue. Must change player order manually if using this method and turns should change.
     public void playerPlayInColumn(Player p, int col) throws NoPlayersInGameException, IndexOutOfBoundsException, PlayerNotInGameException{
         if (this.players.isEmpty()){
             // This should never happen but if the queue is empty there are no players so throw an exception
@@ -115,13 +133,79 @@ public class Game {
         }
 
         char symbol = p.getSymbol();
+        int row = this.getColumnHeight(col);
 
-        grid[this.getColumnHeight(col)][col] = symbol;
+        grid[row][col] = symbol;
 
+        // Call GameChangeListener for this cell being updated
+        this.gameChangeListener.onCellChange(row, col, symbol);
+
+        // Increment height pointer
         this.incrementColumnHeight(col);
+
+        // Check if someone has won and call the related listener method
+        Player winner = this.getGameWinner();
+        if (winner != null){
+            this.gameChangeListener.onGameWon(winner);
+        }
+
+
     }
 
-    /* Simple Util Methods */
+    // Returns which Player won the game
+    // Returns null if no-one won
+    private Player getGameWinner(){
+        // TODO: Make this more efficient. This is really bad right now
+
+        // Check for 3 in same row
+        for (int i = 0; i < grid.length-2; i++){
+            for (int j = 0; j < grid[0].length; j++){
+                if (this.grid[i][j] == this.grid[i+1][j] && this.grid[i][j] == this.grid[i+2][j]){
+                    return this.getPlayerFromSymbol(this.grid[i][j]);
+                }
+            }
+        }
+
+        // Check for 3 in same column
+        for (int i = 0; i < grid.length; i++){
+            for (int j = 0; j < grid[0].length-2; j++){
+                if (this.grid[i][j] == this.grid[i][j+1] && this.grid[i][j] == this.grid[i][j+2]){
+                    return this.getPlayerFromSymbol(this.grid[i][j]);
+                }
+            }
+        }
+
+        // Check upper left to lower right diagonals
+        for (int i = 0; i < grid.length-2; i++){
+            for (int j = 0; j < grid[0].length-2; j++){
+                if (this.grid[i][j] == this.grid[i+1][j+1] && this.grid[i][j] == this.grid[i+2][j+2]){
+                    return this.getPlayerFromSymbol(this.grid[i][j]);
+                }
+            }
+        }
+
+        //Check lower left to upper right diagonals
+        // Start at lower left corner and go up and to the right
+        for (int i = grid.length-1; i >= 2; i--){
+            for (int j = 0; j < grid[0].length-2; j++){
+                if (this.grid[i][j] == this.grid[i-1][j+1] && this.grid[i][j] == this.grid[i-2][j+2]){
+                    return this.getPlayerFromSymbol(this.grid[i][j]);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public boolean isGameWon(){
+        // Get the winning player, or null if no-one has won
+        Player winner = this.getGameWinner();
+
+        // Return true if the winner is not null, and false if the winner is null
+        return winner != null;
+    }
+
+    /****** Simple Util Methods ******/
 
     private boolean isValidColumn(int col){
         //Return true if col is (0,9). False otherwise
@@ -142,5 +226,17 @@ public class Game {
         }
 
         return false;
+    }
+
+    // Return the player that matches the symbol given
+    // Returns null if the symbol doesn't match any players.
+    private Player getPlayerFromSymbol(char symbol){
+        for (Player p: this.players){
+            if (symbol == p.getSymbol()){
+                return p;
+            }
+        }
+
+        return null;
     }
 }
