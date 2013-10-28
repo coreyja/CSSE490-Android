@@ -98,8 +98,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         for (int i = 0; i < 9; i++){
             ImageButton temp = new ImageButton(this);
 
-            //Temporary set text to something
+            // Set the image for the buttons
             temp.setImageResource(R.drawable.column_button);
+            // Set the button background to transparent so you don't see the button under the image
             temp.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             temp.setOnClickListener(this);
@@ -177,7 +178,6 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
                 }
             }
         }
-
 
 	}
 
