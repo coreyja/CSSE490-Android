@@ -2,7 +2,6 @@ package edu.rosehulman.tictactoextreme;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Created by coreyja on 10/27/13.
@@ -12,7 +11,7 @@ public class Game {
     // Use a queue to keep track of players, and whos turn is next.
     // When a player takes their turn, pop them off the queue and insert them at the end.
     // Current player is on top of the queue
-    private Queue<Player> players;
+    private LinkedList<Player> players;
 
     // Char matrix representing the board.
     // Symbols will depend on the Player's symbol attr
@@ -54,6 +53,11 @@ public class Game {
         this.players.add(p);
     }
 
+    // Add a player to the queue at a specific index
+    public void addPlayer(Player p, int index){
+        this.players.add(index,p);
+    }
+
     public Player getCurrentPlayer(){
         // Return the head of the queue, as this is the current Player
         return this.players.peek();
@@ -62,6 +66,14 @@ public class Game {
     public boolean isCurrentPlayerHuman(){
         // Returns true if the current player is a human
         return (this.getCurrentPlayer() instanceof HumanPlayer);
+    }
+
+    public OnGameChangeListener getGameChangeListener() {
+        return gameChangeListener;
+    }
+
+    public void setGameChangeListener(OnGameChangeListener gameChangeListener) {
+        this.gameChangeListener = gameChangeListener;
     }
 
     // Pop the next Player off the queue and re-add them so they go to the end
@@ -77,8 +89,13 @@ public class Game {
         // Call game change listener for turn end
         this.gameChangeListener.onPlayerTurnEnd(old);
 
-        // Add back onto the queue for their next turn
-        this.players.add(old);
+        // Check if the current player is the same as the run we just removed
+        // This will happen when using Two Turn Powerup.
+        // If they are the same, don't add the old one to the queue again. If we did this player would always get two turns
+        if (old != this.getCurrentPlayer()) {
+            // Add back onto the queue for their next turn
+            this.players.add(old);
+        }
 
         // Call game change listener for turn start
         this.gameChangeListener.onPlayerTurnStart(this.getCurrentPlayer());
@@ -99,6 +116,22 @@ public class Game {
         }
 
         return this.grid[row][col];
+    }
+
+    public void setSymbolAtPosition(int row, int col, char sym){
+        // Make sure the row and col are both valid
+        if (!isValidColumn(col)){
+            throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
+        }
+        if (!isValidRow(row)){
+            throw new IndexOutOfBoundsException(String.format("Row %d does not exists", row));
+        }
+
+        // Set the symbol
+        this.grid[row][col] = sym;
+
+        // Tell the GameChangeListener that this cell changed
+        this.gameChangeListener.onCellChange(row, col, sym);
     }
 
     private int getColumnHeight(int col) throws IndexOutOfBoundsException{
@@ -158,10 +191,8 @@ public class Game {
         // Set the row based off the column height and the max columns
         int row = this.grid.length - this.getColumnHeight(col) -1;
 
-        grid[row][col] = symbol;
-
-        // Call GameChangeListener for this cell being updated
-        this.gameChangeListener.onCellChange(row, col, symbol);
+        // Set the symbol to that of this player
+        this.setSymbolAtPosition(row, col, symbol);
 
         // Increment height pointer
         this.incrementColumnHeight(col);

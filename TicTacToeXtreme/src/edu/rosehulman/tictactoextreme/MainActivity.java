@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -26,6 +28,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
     private ImageButton[] columnButtons;
 
     private TextView playerStatusText;
+    private LinearLayout powerupContainer;
+
+    private Powerup powerupWaitingForPosition = null;
 
     // Game object
     private Game game;
@@ -37,15 +42,25 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         // TODO: Change below to add a way to ask user for number of players
         game = new Game(this);
-        game.addPlayer(new HumanPlayer(game, "Player 1", 'X'));
-        game.addPlayer(new HumanPlayer(game, "Player 2", 'O'));
+        Player a = new HumanPlayer(game, "Player 1", 'X');
+        Player b = new HumanPlayer(game, "Player 2", 'O');
+        game.addPlayer(a);
+        game.addPlayer(b);
+
+        a.addPowerup(new TwoTurnsPowerup(game, a));
+        b.addPowerup(new TwoTurnsPowerup(game, b));
 
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
 
+        // Find powerupContainer
+        powerupContainer = (LinearLayout) findViewById(R.id.powerup_container);
+
         // Find player status text view and update it to be what it should start as
         playerStatusText = (TextView) findViewById(R.id.player_status_text);
-        this.updatePlayerStatusText();
+        this.updatePlayerStatus();
+
+
 
         // Init the TextView matrix
         textViewGrid = new TextView[9][9];
@@ -63,6 +78,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
                 //Center the TextField in it's cell
                 temp.setGravity(Gravity.CENTER);
+
+                // Set this as the onClickListener. Used for picking powerup position
+                temp.setOnClickListener(this);
 
                 textViewGrid[i][j] = temp;
                 curRow.addView(temp);
@@ -87,6 +105,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             buttonRow.addView(temp);
         }
 
+
 	}
 
 
@@ -97,13 +116,25 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 		return true;
 	}
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_new_game:
+                //TODO Implement new game functionality
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 	@Override
 	public void onClick(View v) {
         /** Return as soon as you find the view and perform necessary actions **/
 
         // Switch over all the views that have ids
         switch (v.getId()){
-            //None exist yet
+
         }
 
         // Check if it was one of the column buttons. But only if the current player is human
@@ -128,6 +159,22 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             }
         }
 
+        // Only care about clicking textViews if a powerup is waiting for a position
+        if (this.powerupWaitingForPosition != null){
+            for (int i = 0; i < 9; i++){
+                for (int j = 0; j < 9; j++){
+                    if ( ((TextView) v) == this.textViewGrid[i][j]){
+                        // If this TextView was clicked on, tell the power up it's location
+                        this.powerupWaitingForPosition.usePowerup(i,j);
+
+                        // Set to null because no powerup is currently waiting for a position
+                        this.powerupWaitingForPosition = null;
+                        return;
+                    }
+                }
+            }
+        }
+
 
 	}
 
@@ -143,7 +190,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
     @Override
     public void onPlayerTurnStart(Player p) {
         // Just call the method to update the Player Status text
-        this.updatePlayerStatusText();
+        this.updatePlayerStatus();
     }
 
     @Override
@@ -164,21 +211,50 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         }
 
         // Update the player status text since the game is won
-        this.updatePlayerStatusText();
+        this.updatePlayerStatus();
     }
 
-    private void updatePlayerStatusText(){
+    @Override
+    public void onPowerupWaitingForPosition(Powerup powerup) {
+        // Set powerup to the one waiting for a position.
+        // Will clear it once a position is received
+        this.powerupWaitingForPosition = powerup;
+    }
+
+    private void updatePlayerStatus(){
         String message;
+        Player cur = game.getCurrentPlayer();
 
         if (game.isGameWon()){
             Player winner = this.game.getWinner();
             message = String.format("%s won!", winner.getName());
         } else {
-            Player cur = game.getCurrentPlayer();
-
             message = String.format("%s\'s Turn!", cur.getName());
         }
 
         this.playerStatusText.setText(message);
+
+        // Empty the layout so we can fill it with the powerups of the current player
+        powerupContainer.removeAllViewsInLayout();
+
+        for (Powerup p:cur.getPowerups()){
+            // Create a PowerupButton for each powerup and add them to the view
+            PowerupButton temp = new PowerupButton(this);
+
+            temp.setText(p.getStringType());
+            temp.setPowerup(p);
+
+            // OnClick just uses the powerup associated with the button and disables it's self.
+            temp.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((PowerupButton) v).getPowerup().usePowerup();
+                    v.setEnabled(false);
+                }
+            });
+
+            powerupContainer.addView(temp);
+
+        }
     }
 }

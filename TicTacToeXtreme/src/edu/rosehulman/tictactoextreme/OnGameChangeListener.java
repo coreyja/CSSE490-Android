@@ -8,7 +8,6 @@ package edu.rosehulman.tictactoextreme;
  */
 public interface OnGameChangeListener {
 
-
     public void onCellChange(int row, int col, char newSymbol);
 
     // May not both do something but never know so have both exist
@@ -16,4 +15,8 @@ public interface OnGameChangeListener {
     public void onPlayerTurnEnd(Player p);
 
     public void onGameWon(Player winner);
+
+    // Will be called when a human player plays a powerup and is waiting on the position before it is used.
+    public void onPowerupWaitingForPosition(Powerup powerup);
+
 }

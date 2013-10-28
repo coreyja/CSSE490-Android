@@ -17,4 +17,10 @@ public class HumanPlayer extends Player {
         // So empty method it is
         // User interaction and choosing of plays will be determined by MainActivity.
     }
+
+    @Override
+    public void getPowerupPosition(Powerup powerup) {
+        // Need a position from the user. Tell the listener we are waiting for one and let it handle the rest.
+        this.game.getGameChangeListener().onPowerupWaitingForPosition(powerup);
+    }
 }
