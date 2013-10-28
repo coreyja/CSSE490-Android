@@ -6,4 +6,6 @@
     <color name="gridTextViewBackground">#ffffffff</color>
 
     <color name="transparent">#00000000</color>
+
+    <color name="red">#ffff0700</color>
 </resources>

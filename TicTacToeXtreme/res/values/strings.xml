@@ -5,6 +5,13 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="new_game">New Game</string>
+    <string name="add_new_player">Add New Player</string>
+    <string name="player_name_hint">Player Name</string>
+    <string name="player_symbol_hint">X</string>
+    <string name="human">Human</string>
+    <string name="computer">Computer</string>
+    <string name="delete_question">X</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

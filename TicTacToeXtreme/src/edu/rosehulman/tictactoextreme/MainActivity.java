@@ -1,18 +1,26 @@
 package edu.rosehulman.tictactoextreme;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements OnClickListener, OnGameChangeListener {
 
@@ -125,7 +133,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         switch (item.getItemId()) {
             case R.id.action_new_game:
-                //TODO Implement new game functionality
+                // Open the new game dialog to select num and type of players
+                this.openNewGameDialog();
+
                 return true;
         }
 
@@ -262,4 +272,140 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         }
     }
+
+    private void refreshGrid() {
+        char[][] charGrid = this.game.getCharacterGrid();
+
+        for (int i = 0; i < 9; i++){
+            for (int j = 0; j < 9; j++){
+                this.textViewGrid[i][j].setText(String.valueOf(charGrid[i][j]));
+            }
+        }
+    }
+
+    private void enableColumnButtons(){
+        for (ImageButton b: columnButtons){
+            b.setEnabled(true);
+        }
+    }
+
+    private void openNewGameDialog() {
+        new NewGameDialog().show(getFragmentManager(), TAG);
+    }
+
+    private class NewGameDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            // Inflate my custom dialog layout
+            final View new_game_dialog_view = inflater.inflate(R.layout.dialog_new_game, null);
+
+            builder.setView(new_game_dialog_view);
+
+            builder.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // On cancel just dismiss the dialog
+                    dialog.dismiss();
+                }
+            });
+
+            // This is long, creates new Game from player info that exists
+            builder.setPositiveButton(R.string.new_game, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    LinearLayout playerContainer = (LinearLayout) new_game_dialog_view.findViewById(R.id.new_players_container);
+
+                    // Create a new game with MainActivity as the listener
+                    MainActivity.this.game = new Game(MainActivity.this);
+
+                    // Loop over all the children of playerContainer
+                    for (int i = 0; i < playerContainer.getChildCount(); i++){
+                        View player = playerContainer.getChildAt(i);
+
+                        // Get player name and symbol
+                        String name = ((EditText)player.findViewById(R.id.player_name_field)).getText().toString();
+                        String symbolString = ((EditText)player.findViewById(R.id.player_symbol_field)).getText().toString();
+
+
+                        char symbol;
+                        if (symbolString.length() > 0){
+                            symbol = symbolString.charAt(0);
+                        } else {
+                            // Default to X
+                            symbol = 'X';
+                        }
+
+                        // Default to Player # if name not provided
+                        if (name.length() == 0){
+                            name = String.format("Player %d", i+1);
+                        }
+
+                        boolean isComputer = ((ToggleButton)player.findViewById(R.id.player_human_toggle)).isChecked();
+
+                        // Create player based on whether they are human or not
+                        if (!isComputer){
+                            // Not a computer so create the human player
+                            game.addPlayer(new HumanPlayer(game, name, symbol));
+                        } else {
+                            // Is a computer, so create an AI Player
+                            game.addPlayer(new AIPlayer(game, name, symbol));
+                        }
+                    }
+
+                    // After creating new Game with new players refresh the Grid and the player status
+                    MainActivity.this.refreshGrid();
+                    MainActivity.this.updatePlayerStatus();
+                    MainActivity.this.enableColumnButtons();
+
+                    // At the end dismiss the dialog
+                    dialog.dismiss();
+                }
+            });
+
+            // Create On Click Listener for the Add Player Button
+            ((Button) new_game_dialog_view.findViewById(R.id.add_new_player_button)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final LinearLayout playerContainer = (LinearLayout) new_game_dialog_view.findViewById(R.id.new_players_container);
+
+                    // Can only add 3 players
+                    if (playerContainer.getChildCount() < 3){
+                        // Inflate the view with the player info fields and add that to the playerContainer
+                        LayoutInflater inflater = getActivity().getLayoutInflater();
+                        View newPlayer = inflater.inflate(R.layout.new_player_info, null);
+
+                        // Set onClickListener for delete button of each player
+                        ((Button) newPlayer.findViewById(R.id.delete_player_button)).setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Remove this players info section from the container
+                                playerContainer.removeView((View)v.getParent());
+
+                                // Since we removed a player, there must be less than 3 so another can be added
+                                ((Button) new_game_dialog_view.findViewById(R.id.add_new_player_button)).setEnabled(true);
+                            }
+                        });
+
+                        // Add the new player view to the container
+                        playerContainer.addView(newPlayer);
+                    }
+
+                    if (playerContainer.getChildCount() == 3) {
+                        // If there are now 3 players disable this button
+                        v.setEnabled(false);
+                    }
+
+                }
+            });
+
+            return builder.create();
+        }
+    }
 }
+
+
