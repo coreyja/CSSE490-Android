@@ -258,7 +258,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             // Create a PowerupButton for each powerup and add them to the view
             PowerupButton temp = new PowerupButton(this);
 
-            temp.setText(p.getStringType());
+//            temp.setText(p.getStringType());
             temp.setPowerup(p);
 
             // OnClick just uses the powerup associated with the button and disables it's self.

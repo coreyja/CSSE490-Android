@@ -19,6 +19,6 @@ public class TwoTurnsPowerup extends Powerup {
 
     @Override
     public String getStringType() {
-        return "Two-Turns";
+        return "2X";
     }
 }
