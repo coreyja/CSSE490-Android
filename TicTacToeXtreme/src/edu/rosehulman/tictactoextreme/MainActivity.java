@@ -2,17 +2,26 @@ package edu.rosehulman.tictactoextreme;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends Activity implements OnClickListener {
 	private Button[][] mButtons = new Button[9][9];
+	private ImageButton mPower1Player1;
+	private ImageButton mPower2Player1;
+	private ImageButton mPower1Player2;
+	private ImageButton mPower2Player2;
 	private Button mNewButton;
 	private Button mExitButton;
+	private static final int[] IMAGE_BUTTON_IDS = { R.drawable.ic_2xredo,
+			R.drawable.ic_bomb, R.drawable.ic_uno_cards_reverseredo };
 	private static final int[][] BUTTON_IDS = {
 			{ R.id.button00, R.id.button01, R.id.button02, R.id.button03,
 					R.id.button04, R.id.button05, R.id.button06, R.id.button07,
@@ -48,6 +57,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		initializeGame();
 		isWinner();
+		mPower1Player1 = (ImageButton) findViewById(R.id.Power1forPlayer1);
+		mPower2Player1 = (ImageButton) findViewById(R.id.Power2forPlayer1);
+		mPower1Player2 = (ImageButton) findViewById(R.id.Power1forPlayer2);
+		mPower2Player2 = (ImageButton) findViewById(R.id.Power2forPlayer2);
+		
 		mNewButton = (Button) findViewById(R.id.New_Game_Button);
 		mNewButton.setOnClickListener(new OnClickListener() {
 
@@ -99,11 +113,22 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				if (vID == BUTTON_IDS[i][j]
 						&& !this.mButtons[i - 1][j].isClickable()) {
+					if (this.mButtons[i][j].getText().equals(
+							R.string.Mystery_PowerUp_String)) {
+						landedOnPowerUp();
+					}
 					this.mButtons[i][j].setText(R.string.X_string);
 					this.mButtons[i][j].setClickable(false);
 				}
 			}
 		}
+	}
+
+	private void landedOnPowerUp() {
+		Random rand = new Random();
+		mPower1Player1.setBackgroundResource(IMAGE_BUTTON_IDS[rand.nextInt(2)]);
+		
+
 	}
 
 	private void isWinner() {

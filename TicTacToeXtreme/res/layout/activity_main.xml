@@ -627,7 +627,7 @@
     </GridLayout>
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/Power1forPlayer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/gridLayout1"
@@ -635,15 +635,7 @@
         android:src="@drawable/ic_blank_space" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageButton1"
-        android:layout_toRightOf="@+id/imageButton1"
-        android:src="@drawable/ic_blank_space" />
-
-    <ImageButton
-        android:id="@+id/imageButton4"
+        android:id="@+id/Power2forPlayer2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -651,11 +643,19 @@
         android:src="@drawable/ic_blank_space" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/Power2forPlayer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/imageButton4"
+        android:layout_toRightOf="@+id/Power1forPlayer1"
+        android:src="@drawable/ic_blank_space" />
+
+    <ImageButton
+        android:id="@+id/Power1forPlayer2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/Power2forPlayer2"
         android:src="@drawable/ic_blank_space" />
 
 </RelativeLayout>
