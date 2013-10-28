@@ -375,7 +375,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
                             symbol = symbolString.charAt(0);
                         } else {
                             // Default to X
-                            symbol = 'X';
+                            symbol = (char)('A' + i);
                         }
 
                         // Default to Player # if name not provided
