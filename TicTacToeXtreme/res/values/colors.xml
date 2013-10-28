@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
  
-    <color name="background">#ffffffff</color>
+    <color name="background">#CBFCAC</color>
 
     <color name="gridTextViewBackground">#ffffffff</color>
 

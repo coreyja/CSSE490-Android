@@ -79,6 +79,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
             // Create a new TableRow and add it to the table
             TableRow curRow = new TableRow(this);
+
             tableLayout.addView(curRow);
 
             for (int j = 0; j < 9; j++){
@@ -89,6 +90,14 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
                 //Center the TextField in it's cell
                 temp.setGravity(Gravity.CENTER);
+
+                // Add margins to the cells
+                TableRow.LayoutParams params = new TableRow.LayoutParams(
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(10, 10, 10, 10);
+                temp.setLayoutParams(params);
 
                 // Set this as the onClickListener. Used for picking powerup position
                 temp.setOnClickListener(this);
@@ -258,7 +267,6 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             // Create a PowerupButton for each powerup and add them to the view
             PowerupButton temp = new PowerupButton(this);
 
-//            temp.setText(p.getStringType());
             temp.setPowerup(p);
 
             // OnClick just uses the powerup associated with the button and disables it's self.
