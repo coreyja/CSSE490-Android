@@ -101,11 +101,19 @@ public class Game {
 
         // Call game change listener for turn start
         this.gameChangeListener.onPlayerTurnStart(this.getCurrentPlayer());
+
+        // Tell the player to take their turn. Mostly for AI players
+        this.getCurrentPlayer().takeTurn();
     }
 
     // Simple getter for entire character grid.
     public char[][] getCharacterGrid(){
         return this.grid;
+    }
+
+    // Getter for colHeight. Used by AI to determine moves.
+    public int[] getColHeights() {
+        return colHeight;
     }
 
     // Will return '\u0000' if symbol does not exist in grid
