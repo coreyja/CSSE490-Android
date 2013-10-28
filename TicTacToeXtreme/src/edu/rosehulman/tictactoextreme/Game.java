@@ -8,6 +8,8 @@ import java.util.LinkedList;
  */
 public class Game {
 
+    public static final char DEFAULT_CHARACTER = '\u0000';
+
     // Use a queue to keep track of players, and whos turn is next.
     // When a player takes their turn, pop them off the queue and insert them at the end.
     // Current player is on top of the queue
@@ -134,6 +136,45 @@ public class Game {
         this.gameChangeListener.onCellChange(row, col, sym);
     }
 
+    public void deleteSymbolAtPosition(int row, int col){
+        char old = this.getSymbolFromGrid(row,col);
+
+        //If the old character matches the default character nothing to do so done.
+        if (old == Game.DEFAULT_CHARACTER) return;
+
+        // Set this cell to the default
+        this.setSymbolAtPosition(row, col, Game.DEFAULT_CHARACTER);
+
+        // Removed a symbol so decrease the height of the row
+        this.colHeight[col]--;
+
+        // Move all the symbols down the column if possible
+        this.moveSymbolsDownColumn(row, col);
+    }
+
+    private void moveSymbolsDownColumn(int row, int col){
+        //Error Checking
+        if (!isValidColumn(col)) throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
+
+        // Base Case: row < 0. Should never happen
+        if (row < 0) return;
+
+        //Base Case: row == 0. Set it to default and be done.
+        if (row == 0) { this.setSymbolAtPosition(row, col, Game.DEFAULT_CHARACTER); return; }
+
+        // Base Case: If the character above is the default then we reached the top of the col so set this one then return
+        if (this.getSymbolFromGrid(row-1, col) == Game.DEFAULT_CHARACTER){
+            this.setSymbolAtPosition(row, col, Game.DEFAULT_CHARACTER);
+            return;
+        }
+
+        // Set this symbol to the one above it.
+        this.setSymbolAtPosition(row, col, this.getSymbolFromGrid(row-1, col));
+
+        // Recurse to the next row up the column
+        this.moveSymbolsDownColumn(row-1, col);
+    }
+
     private int getColumnHeight(int col) throws IndexOutOfBoundsException{
         // Error checking
         if (!isValidColumn(col)){
@@ -197,14 +238,19 @@ public class Game {
         // Increment height pointer
         this.incrementColumnHeight(col);
 
-        // Check if someone has won and call the related listener method
+
+        //Check if there is a winner from this play
+        this.checkForWinner();
+
+    }
+
+    public void checkForWinner() {
+        // Check if someone has won and call the related listener method. Also set the boolean for faster lookup later
         Player winner = this.getWinner();
         if (winner != null){
             this.isGameWon = true;
             this.gameChangeListener.onGameWon(winner);
         }
-
-
     }
 
     // Returns which Player won the game
@@ -260,12 +306,12 @@ public class Game {
 
     /****** Simple Util Methods ******/
 
-    private boolean isValidColumn(int col){
+    public boolean isValidColumn(int col){
         //Return true if col is (0,9). False otherwise
 
-        return !(col < 0 || col > 9);
+        return !(col < 0 || col >= 9);
     }
-    private boolean isValidRow(int row){
+    public boolean isValidRow(int row){
         // Just call isValidColumn since the grid is square
         return this.isValidColumn(row);
     }

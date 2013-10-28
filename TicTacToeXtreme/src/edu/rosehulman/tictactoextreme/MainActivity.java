@@ -50,6 +50,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         a.addPowerup(new TwoTurnsPowerup(game, a));
         b.addPowerup(new TwoTurnsPowerup(game, b));
 
+        a.addPowerup(new BombPowerup(game, a));
+        b.addPowerup(new BombPowerup(game, b));
+
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
 
@@ -137,9 +140,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         }
 
-        // Check if it was one of the column buttons. But only if the current player is human
+        // Check if it was one of the column buttons. But only if the current player is human and the clicked view is an ImageButton
         // If current player isn't human, we can ignore any clicks on these buttons
-        if (game.isCurrentPlayerHuman()){
+        if (game.isCurrentPlayerHuman() && v instanceof ImageButton){
             for (int i = 0; i < columnButtons.length; i++){
                 if ( ((ImageButton)v) == columnButtons[i] ){
                     try {
@@ -181,7 +184,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
     @Override
     public void onCellChange(int row, int col, char newSymbol) {
-        // TODO: Add animation of symbol falling down col here
+        // TODO: Add animation of symbol falling down col here.
+        // Note: May not be able to add this animtion here since this is called on each update.
+        // For example when using a bomb, symbols are deleted and this is called multiple times
 
         // Set the referenced cell to the new symbol
         this.textViewGrid[row][col].setText(String.valueOf(newSymbol));
