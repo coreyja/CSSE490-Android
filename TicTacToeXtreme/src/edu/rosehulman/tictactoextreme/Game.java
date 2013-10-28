@@ -143,7 +143,9 @@ public class Game {
         }
 
         char symbol = p.getSymbol();
-        int row = this.getColumnHeight(col);
+
+        // Set the row based off the column height and the max columns
+        int row = this.grid.length - this.getColumnHeight(col) -1;
 
         grid[row][col] = symbol;
 
