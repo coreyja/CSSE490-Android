@@ -7,7 +7,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -23,7 +23,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
     private TextView[][] textViewGrid;
 
     // Holds the dynamically generated buttons for Player choosing move
-    private Button[] columnButtons;
+    private ImageButton[] columnButtons;
 
     private TextView playerStatusText;
 
@@ -70,15 +70,16 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         }
 
         //Init the column buttons
-        columnButtons = new Button[9];
+        columnButtons = new ImageButton[9];
 
         TableRow buttonRow = new TableRow(this);
         tableLayout.addView(buttonRow);
         for (int i = 0; i < 9; i++){
-            Button temp = new Button(this);
+            ImageButton temp = new ImageButton(this);
 
             //Temporary set text to something
-            temp.setText("G");
+            temp.setImageResource(R.drawable.red_button_25x25);
+            temp.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             temp.setOnClickListener(this);
 
@@ -109,7 +110,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         // If current player isn't human, we can ignore any clicks on these buttons
         if (game.isCurrentPlayerHuman()){
             for (int i = 0; i < columnButtons.length; i++){
-                if ( ((Button)v) == columnButtons[i] ){
+                if ( ((ImageButton)v) == columnButtons[i] ){
                     try {
                         // If the current player is human, and we clicked the button make the move.
                         // This will end the players turn.
@@ -158,7 +159,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         Log.d(TAG, result);
 
         // Disable all the buttons
-        for (Button b : columnButtons){
+        for (ImageButton b : columnButtons){
             b.setEnabled(false);
         }
 
