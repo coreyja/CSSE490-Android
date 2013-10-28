@@ -15,6 +15,7 @@ public class Game {
 
     // Char matrix representing the board.
     // Symbols will depend on the Player's symbol attr
+    // Will be used as [row][col]
     private char[][] grid;
 
     // The number of spaces in each col that have been used
@@ -37,6 +38,8 @@ public class Game {
 
     public Game() {
         //Default constructor should only be used for testing and development
+
+        //Need to add 1 or 2 Humans once I get that written so I can dev easier
     }
 
     public Player getCurrentPlayer(){
@@ -50,17 +53,74 @@ public class Game {
     }
 
 
-    public int getColumnHeight(int col) throws IndexOutOfBoundsException{
+
+    private int getColumnHeight(int col) throws IndexOutOfBoundsException{
         // Error checking
-        if (col < 0 || col > 9){
+        if (!isValidColumn(col)){
             // For now throw an exception.
             // Might change this later though if using try/catches for it gets annoying as shit
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
         }
 
         // Simply return the number stored in the array
         return this.colHeight[col];
     }
 
-    
+    private void incrementColumnHeight(int col) throws IndexOutOfBoundsException{
+        // Error checking
+        if (!isValidColumn(col)){
+            throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
+        }
+
+        this.colHeight[col]++;
+    }
+
+    // Will most likely be used for human players clicking buttons to pick move
+    public void currentPlayerPlayInColumn(int col) throws NoPlayersInGameException, IndexOutOfBoundsException{
+
+        //Wrapping this is a try catch so that it doesn't have to throw PlayerNotInGameException since we are grabbing the current player
+        try {
+            this.playerPlayInColumn(this.getCurrentPlayer(), col);
+        } catch (PlayerNotInGameException e){
+            // Will never be able to get here since currentPlayer will always be in the game if the queue isn't empty
+            // If queue is empty, NoPlayersInGameException will be thrown instead
+        }
+
+    }
+
+    public void playerPlayInColumn(Player p, int col) throws NoPlayersInGameException, IndexOutOfBoundsException, PlayerNotInGameException{
+        if (this.players.isEmpty()){
+            // This should never happen but if the queue is empty there are no players so throw an exception
+            throw new NoPlayersInGameException();
+        }
+        if (!this.isPlayerInGame(p)){
+            //Again, should never happen but in case weird things happen. Will make debugging easier.
+            throw new PlayerNotInGameException();
+        }
+
+        char symbol = p.getSymbol();
+
+        grid[this.getColumnHeight(col)][col] = symbol;
+
+        this.incrementColumnHeight(col);
+    }
+
+    /* Simple Util Methods */
+
+    private boolean isValidColumn(int col){
+        //Return true if col is (0,9). False otherwise
+
+        return !(col < 0 || col > 9);
+    }
+
+    // Should never be needed, but here for good error checking
+    private boolean isPlayerInGame(Player player){
+        for (Player p : this.players){
+            if (p == player){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
