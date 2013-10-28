@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             ImageButton temp = new ImageButton(this);
 
             //Temporary set text to something
-            temp.setImageResource(R.drawable.red_button_25x25);
+            temp.setImageResource(R.drawable.column_button);
             temp.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             temp.setOnClickListener(this);
