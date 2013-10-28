@@ -53,6 +53,22 @@ public class Game {
     }
 
 
+    // Simple getter for entire character grid.
+    public char[][] getCharacterGrid(){
+        return this.grid;
+    }
+
+    // Will return null if symbol does not exist if grid
+    public char getSymbolFromGrid(int row, int col){
+        if (!isValidColumn(col)){
+            throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
+        }
+        if (!isValidRow(row)){
+            throw new IndexOutOfBoundsException(String.format("Row %d does not exists", row));
+        }
+
+        return this.grid[row][col];
+    }
 
     private int getColumnHeight(int col) throws IndexOutOfBoundsException{
         // Error checking
@@ -111,6 +127,10 @@ public class Game {
         //Return true if col is (0,9). False otherwise
 
         return !(col < 0 || col > 9);
+    }
+    private boolean isValidRow(int row){
+        // Just call isValidColumn since the grid is square
+        return this.isValidColumn(row);
     }
 
     // Should never be needed, but here for good error checking
