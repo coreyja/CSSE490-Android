@@ -5,10 +5,11 @@ package edu.rosehulman.tictactoextreme;
  */
 public class HumanPlayer extends Player {
 
-    // Need to define a constructor or else HumanPlayer will have a default constructor and I don't want one
-    public HumanPlayer(Game g){
-        super(g);
-    }
+
+    // Define constructors. Nothing special needed for humans so call super
+    public HumanPlayer(Game g){ super(g); }
+    public HumanPlayer(Game g, String name){ super(g,name); }
+    public HumanPlayer(Game g, String name, char sym){ super(g,name,sym); }
 
     @Override
     public void takeTurn() {

@@ -1,6 +1,7 @@
 package edu.rosehulman.tictactoextreme;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -25,12 +26,8 @@ public class Game {
     // Will be MainActivity. Used to pass information needed to update display
     private OnGameChangeListener gameChangeListener;
 
-    public Game(Player[] playerArray, OnGameChangeListener listener){
-        //Add all the players to the Queue
-        for (Player p: playerArray){
-            this.players.add(p);
-        }
-
+    // Players will not be added at construct time since Players need Game to be constructed
+    public Game(OnGameChangeListener listener){
         // Save the listener
         this.gameChangeListener = listener;
 
@@ -40,14 +37,27 @@ public class Game {
         // Init height counters
         this.colHeight = new int[9];
 
+        // Init the players queue. Use LinkedList as the implementation of a Queue.
+        this.players = new LinkedList<Player>();
+
         // Most likely inited to 0, but to make sure.
         // Also, Arrays.fill is most likely not anymore efficient than a loop, but could be optimized somehow internally
         Arrays.fill(colHeight, 0);
     }
 
+    // Add a player to the game.
+    public void addPlayer(Player p){
+        this.players.add(p);
+    }
+
     public Player getCurrentPlayer(){
         // Return the head of the queue, as this is the current Player
         return this.players.peek();
+    }
+
+    public boolean currentPlayerIsHuman(){
+        // Returns true if the current player is a human
+        return (this.getCurrentPlayer() instanceof HumanPlayer);
     }
 
     // Pop the next Player off the queue and re-add them so they go to the end

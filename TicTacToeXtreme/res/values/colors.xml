@@ -3,7 +3,7 @@
  
     <color name="background">#ffffffff</color>
 
-    <color name="gridTextViewBackground">#ffffffff</color>
+    <color name="gridTextViewBackground">#ffff0012</color>
 
 
 </resources>
