@@ -5,11 +5,11 @@ package edu.rosehulman.tictactoextreme;
  */
 public abstract class Player {
 
-    private Game game;
+    protected Game game;
 
-    private String name;
+    protected String name;
 
-    private char symbol;
+    protected char symbol;
 
     public Player(Game g, String name, char symbol){
         this.game = g;
