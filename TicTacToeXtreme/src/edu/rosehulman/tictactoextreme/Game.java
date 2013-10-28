@@ -123,6 +123,9 @@ public class Game {
         } catch (PlayerNotInGameException e){
             // Will never be able to get here since currentPlayer will always be in the game if the queue isn't empty
             // If queue is empty, NoPlayersInGameException will be thrown instead
+            // But if we get here somehow, return don't try to end the current players turn
+            return;
+
         }
 
         //End this players turn
@@ -172,7 +175,8 @@ public class Game {
         // Check for 3 in same row
         for (int i = 0; i < grid.length-2; i++){
             for (int j = 0; j < grid[0].length; j++){
-                if (this.grid[i][j] == this.grid[i+1][j] && this.grid[i][j] == this.grid[i+2][j]){
+                // '\u0000' is the default value for a java char. If the value is this, there is no real symbol there
+                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i+1][j] && this.grid[i][j] == this.grid[i+2][j]){
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
@@ -181,7 +185,7 @@ public class Game {
         // Check for 3 in same column
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length-2; j++){
-                if (this.grid[i][j] == this.grid[i][j+1] && this.grid[i][j] == this.grid[i][j+2]){
+                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i][j+1] && this.grid[i][j] == this.grid[i][j+2]){
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
@@ -190,7 +194,7 @@ public class Game {
         // Check upper left to lower right diagonals
         for (int i = 0; i < grid.length-2; i++){
             for (int j = 0; j < grid[0].length-2; j++){
-                if (this.grid[i][j] == this.grid[i+1][j+1] && this.grid[i][j] == this.grid[i+2][j+2]){
+                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i+1][j+1] && this.grid[i][j] == this.grid[i+2][j+2]){
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
@@ -200,7 +204,7 @@ public class Game {
         // Start at lower left corner and go up and to the right
         for (int i = grid.length-1; i >= 2; i--){
             for (int j = 0; j < grid[0].length-2; j++){
-                if (this.grid[i][j] == this.grid[i-1][j+1] && this.grid[i][j] == this.grid[i-2][j+2]){
+                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i-1][j+1] && this.grid[i][j] == this.grid[i-2][j+2]){
                     return this.getPlayerFromSymbol(this.grid[i][j]);
                 }
             }
