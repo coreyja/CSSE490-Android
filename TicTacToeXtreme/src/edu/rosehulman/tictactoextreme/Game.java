@@ -369,4 +369,11 @@ public class Game {
 
         return null;
     }
+    public boolean isOccupied(int row, int col){
+    	if(this.grid[row][col] =='\u0000'){
+    		return false;
+    	} else {
+    		return true;
+    	}
+    }
 }
