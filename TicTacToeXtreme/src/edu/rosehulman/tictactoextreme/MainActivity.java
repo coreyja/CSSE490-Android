@@ -1,5 +1,7 @@
 package edu.rosehulman.tictactoextreme;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -85,6 +87,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
             for (int j = 0; j < 9; j++){
                 TextView temp = new TextView(this);
+                
 
                 // Set styles for text views
                 temp.setBackgroundColor(getResources().getColor(R.color.gridTextViewBackground));
@@ -106,6 +109,13 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
                 textViewGrid[i][j] = temp;
                 curRow.addView(temp);
             }
+        }
+        //Creates the mystery buttons in random sections on the board
+        for (int i = 0; i < 20; i++){
+        	Random mystery_button_randomize = new Random();
+        	int j = mystery_button_randomize.nextInt(8);
+        	int k = mystery_button_randomize.nextInt(8);
+        	textViewGrid[j][k].setText(R.string.mystery_buttons);
         }
 
         //Init the column buttons
@@ -294,6 +304,13 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
                 this.textViewGrid[i][j].setText(String.valueOf(charGrid[i][j]));
                 this.textViewGrid[i][j].setBackgroundResource(R.color.gridTextViewBackground);
             }
+        }
+        //Creates the mystery buttons in random sections on the board
+        for (int i = 0; i < 20; i++){
+        	Random mystery_button_randomize = new Random();
+        	int j = mystery_button_randomize.nextInt(8);
+        	int k = mystery_button_randomize.nextInt(8);
+        	textViewGrid[j][k].setText(R.string.mystery_buttons);
         }
     }
 
