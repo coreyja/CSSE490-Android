@@ -28,6 +28,8 @@ Ut laoreet nunc enim, sit amet sollicitudin quam hendrerit eu. Ut quis commodo m
 Sed gravida dictum turpis in imperdiet. Nulla ac turpis aliquam ante viverra facilisis. Curabitur vitae mauris gravida, ornare est non, mollis orci. Nam dapibus ac sem non varius. Suspendisse dictum purus non aliquam sagittis. Etiam rhoncus neque orci, in euismod dui accumsan a. Phasellus gravida at risus vel vulputate. In hac habitasse platea dictumst. Mauris eget libero at enim molestie semper sit amet id sapien. In quis rhoncus turpis. Sed fermentum, mi sed tincidunt fermentum, lectus magna venenatis lorem, eget vulputate diam tortor a turpis. Sed condimentum, lacus nec scelerisque fringilla, est neque vulputate ipsum, ac suscipit odio est vitae mi.
     </string>
     <string name="help">Help</string>
+    <string name="title">TicTacToe Xtreme</string>
+    <string name="start_game">Start Game</string>
 
 
 </resources>

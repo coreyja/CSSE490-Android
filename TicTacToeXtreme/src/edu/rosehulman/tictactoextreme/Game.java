@@ -300,6 +300,14 @@ public class Game implements Serializable {
     }
 
     public boolean isMysteryCell(int row, int col){
+        // Make sure the row and col are both valid
+        if (!isValidColumn(col)){
+            throw new IndexOutOfBoundsException(String.format("Column %d does not exists", col));
+        }
+        if (!isValidRow(row)){
+            throw new IndexOutOfBoundsException(String.format("Row %d does not exists", row));
+        }
+
         return this.grid[row][col] == MYSTERY_CHARACTER;
     }
 
@@ -322,8 +330,13 @@ public class Game implements Serializable {
         // Check for 3 in same row
         for (int i = 0; i < grid.length-2; i++){
             for (int j = 0; j < grid[0].length; j++){
-                // '\u0000' is the default value for a java char. If the value is this, there is no real symbol there
-                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i+1][j] && this.grid[i][j] == this.grid[i+2][j]){
+                // '\u0000' is the default value for a java char. If the value is this, there is no real symbol there.
+                // Same idea applies to the Mystery character '?'. It isn't a player
+                if (this.grid[i][j] == DEFAULT_CHARACTER || this.grid[i][j] == MYSTERY_CHARACTER){
+                    continue;
+                }
+
+                if (this.grid[i][j] == this.grid[i+1][j] && this.grid[i][j] == this.grid[i+2][j]){
                     winningCells[0] = new Point(i,j);
                     winningCells[1] = new Point(i+1,j);
                     winningCells[2] = new Point(i+2,j);
@@ -335,7 +348,13 @@ public class Game implements Serializable {
         // Check for 3 in same column
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length-2; j++){
-                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i][j+1] && this.grid[i][j] == this.grid[i][j+2]){
+                // '\u0000' is the default value for a java char. If the value is this, there is no real symbol there.
+                // Same idea applies to the Mystery character '?'. It isn't a player
+                if (this.grid[i][j] == DEFAULT_CHARACTER || this.grid[i][j] == MYSTERY_CHARACTER){
+                    continue;
+                }
+
+                if (this.grid[i][j] == this.grid[i][j+1] && this.grid[i][j] == this.grid[i][j+2]){
                     winningCells[0] = new Point(i,j);
                     winningCells[1] = new Point(i,j+1);
                     winningCells[2] = new Point(i,j+2);
@@ -347,7 +366,7 @@ public class Game implements Serializable {
         // Check upper left to lower right diagonals
         for (int i = 0; i < grid.length-2; i++){
             for (int j = 0; j < grid[0].length-2; j++){
-                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i+1][j+1] && this.grid[i][j] == this.grid[i+2][j+2]){
+                if (this.grid[i][j] == this.grid[i+1][j+1] && this.grid[i][j] == this.grid[i+2][j+2]){
                     winningCells[0] = new Point(i,j);
                     winningCells[1] = new Point(i+1,j+1);
                     winningCells[2] = new Point(i+2,j+2);
@@ -360,7 +379,13 @@ public class Game implements Serializable {
         // Start at lower left corner and go up and to the right
         for (int i = grid.length-1; i >= 2; i--){
             for (int j = 0; j < grid[0].length-2; j++){
-                if (this.grid[i][j] != '\u0000' && this.grid[i][j] == this.grid[i-1][j+1] && this.grid[i][j] == this.grid[i-2][j+2]){
+                // '\u0000' is the default value for a java char. If the value is this, there is no real symbol there.
+                // Same idea applies to the Mystery character '?'. It isn't a player
+                if (this.grid[i][j] == DEFAULT_CHARACTER || this.grid[i][j] == MYSTERY_CHARACTER){
+                    continue;
+                }
+
+                if (this.grid[i][j] == this.grid[i-1][j+1] && this.grid[i][j] == this.grid[i-2][j+2]){
                     winningCells[0] = new Point(i,j);
                     winningCells[1] = new Point(i-1,j+1);
                     winningCells[2] = new Point(i-2,j+2);

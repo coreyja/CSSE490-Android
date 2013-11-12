@@ -10,4 +10,7 @@
     <color name="red">#ffff0700</color>
 
     <color name="yellow">#fffffa00</color>
+
+    <color name="white">#ffffffff</color>
+    <color name="black">#000000</color>
 </resources>

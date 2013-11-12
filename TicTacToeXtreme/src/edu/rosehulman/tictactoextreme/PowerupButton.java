@@ -27,7 +27,7 @@ public class PowerupButton extends ImageButton implements Serializable{
             this.setImageResource(R.drawable.bomb_powerup);
         } else if (type == "2X") {
             this.setImageResource(R.drawable.twox_powerup);
-        } else if (type == "Reversal") {
+        } else if (type == "Swap") {
             this.setImageResource(R.drawable.reversal_powerup);
         }
     }
