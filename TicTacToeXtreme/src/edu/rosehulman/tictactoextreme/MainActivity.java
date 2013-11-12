@@ -56,12 +56,7 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        // TODO: Change below to add a way to ask user for number of players
         game = new Game(this);
-        Player a = new HumanPlayer(game, "A", 'A');
-        Player b = new AIPlayer(game, "B", 'B');
-        game.addPlayer(a);
-        game.addPlayer(b);
 
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
@@ -71,8 +66,6 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
 
         // Find player status text view and update it to be what it should start as
         playerStatusText = (TextView) findViewById(R.id.player_status_text);
-        this.updatePlayerStatus();
-
 
 
         // Init the TextView matrix
@@ -136,6 +129,8 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         setDetecting(true);
         this.startPushing();
 
+        // Game is set up so launch new game dialog to add players
+        this.openNewGameDialog();
 	}
 
 
@@ -271,6 +266,9 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
     private void updatePlayerStatus(){
         String message;
         Player cur = game.getCurrentPlayer();
+
+        // If the current player is null, just return
+        if (cur == null) return;
 
         if (game.isGameWon()){
             Player winner = this.game.getWinner();

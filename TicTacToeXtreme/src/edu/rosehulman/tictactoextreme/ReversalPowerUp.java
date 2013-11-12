@@ -18,20 +18,20 @@ public class ReversalPowerUp extends Powerup {
 	public void usePowerup(int row, int col) {
 		// Player has told us where to use the powerup
 
-		// Makes the reversal of the buttons
-		if (!this.game.isOccupied(row, col)) {
-			// do nothing, but save power-up
-		} else if (!this.game.isOccupied(row, col + 1)
-				&& this.game.isValidColumn(col + 1)) {
-			this.game.setSymbolAtPosition(row, col + 1,
-					this.game.getSymbolFromGrid(row, col));
-			this.game.setSymbolAtPosition(row, col,
-					this.game.getCurrentPlayer().symbol);
-		} else if (this.game.isOccupied(row, col + 1) && this.game.isValidColumn(col + 1)){
-			char saved_symbol = this.game.getSymbolFromGrid(row, col);
-			this.game.setSymbolAtPosition(row, col, this.game.getSymbolFromGrid(row, col + 1));
-			this.game.setSymbolAtPosition(row, col + 1, saved_symbol);
-		}
+        if (!this.game.isOccupied(row, col) || !this.game.isValidRow(row-1) || !this.game.isOccupied(row-1, col)) {
+            // 3 Cases where it isn't used, and wastes the powerup
+            // - Cell picked is empty
+            // - Cell above doesn't exists
+            // - Cell above is empty
+            return;
+        }
+
+
+        // If the cell is occupied as is the one above, simply switch the symbols.
+        char temp = this.game.getSymbolFromGrid(row, col);
+        this.game.setSymbolAtPosition(row, col, this.game.getSymbolFromGrid(row-1, col));
+        this.game.setSymbolAtPosition(row-1, col, temp);
+
 
 		// Check for winner since symbols falling could cause someone to win
 		this.game.checkForWinner();
@@ -41,12 +41,12 @@ public class ReversalPowerUp extends Powerup {
 	@Override
 	public String getStringType() {
 		// TODO Auto-generated method stub
-		return "Reversal";
+		return "Swap";
 	}
 
     @Override
     public String getName() {
-        return "Reversal Powerup";
+        return "Swap Powerup";
     }
 
 }
