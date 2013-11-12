@@ -30,6 +30,9 @@ public class BombPowerup extends Powerup {
             }
         }
 
+        // Remove this powerup from the player
+        this.player.removePowerup(this);
+
         // Check for winner since symbols falling could cause someone to win
         this.game.checkForWinner();
 

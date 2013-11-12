@@ -32,6 +32,9 @@ public class SwapPowerUp extends Powerup {
         this.game.setSymbolAtPosition(row, col, this.game.getSymbolFromGrid(row-1, col));
         this.game.setSymbolAtPosition(row - 1, col, temp);
 
+        // Remove this powerup from the player
+        this.player.removePowerup(this);
+
 
 		// Check for winner since symbols falling could cause someone to win
 		this.game.checkForWinner();
