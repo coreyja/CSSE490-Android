@@ -5,11 +5,17 @@ package edu.rosehulman.tictactoextreme;
  */
 public class HumanPlayer extends Player {
 
+    public static final String TYPE = "Human";
 
     // Define constructors. Nothing special needed for humans so call super
     public HumanPlayer(Game g){ super(g); }
     public HumanPlayer(Game g, String name){ super(g,name); }
     public HumanPlayer(Game g, String name, char sym){ super(g,name,sym); }
+
+    @Override
+    public String getType() {
+        return this.TYPE;
+    }
 
     @Override
     public void takeTurn() {

@@ -10,6 +10,8 @@ import java.util.Random;
  */
 public class AIPlayer extends Player{
 
+    public static final String TYPE = "AI";
+
     // Use this as a probability for randomizing things for the AI.
     // Default to 0.5 for now. Will decide later what is should be.
     // TODO: Figure out what the difficulty levels should be (set final static doubles for them), and set default to medium
@@ -24,6 +26,11 @@ public class AIPlayer extends Player{
 
         // Save the difficulty for the AI
         this.difficulty = difficulty;
+    }
+
+    @Override
+    public String getType() {
+        return this.TYPE;
     }
 
     @Override

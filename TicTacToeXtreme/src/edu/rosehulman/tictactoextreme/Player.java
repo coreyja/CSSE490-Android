@@ -66,6 +66,9 @@ public abstract class Player {
         this.powerups.remove(powerup);
     }
 
+    // Will return a string specifying the type of Player
+    public abstract String getType();
+
     // Will make a move for an AI player
     // Won't do anything and wait for user input for a human player
     // Will call playerPlayInColumn from this.game
