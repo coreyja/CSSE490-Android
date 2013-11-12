@@ -150,6 +150,11 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                 this.openNewGameDialog();
 
                 return true;
+            case R.id.action_help:
+                //Open the help dialog
+                this.openHelpDialog();
+
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -330,6 +335,15 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                 columnButtons[i].setEnabled(false);
             }
         }
+    }
+
+    private void openHelpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.help_dialog_title);
+        builder.setMessage(R.string.help_dialog_message);
+
+        builder.create().show();
     }
 
     private void openNewGameDialog() {

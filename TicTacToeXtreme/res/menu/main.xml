@@ -4,4 +4,7 @@
         android:id="@+id/action_new_game"
         android:title="@string/new_game" />
 
+    <item android:id="@+id/action_help"
+        android:title="@string/help" />
+
 </menu>
