@@ -49,6 +49,10 @@ public abstract class Player {
         this.symbol = symbol;
     }
 
+    public boolean hasPowerups(){
+        return !this.powerups.isEmpty();
+    }
+
     public Powerup[] getPowerups(){
         return this.powerups.toArray(new Powerup[0]);
     }
