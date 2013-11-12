@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.graphics.Point;
 import android.nfc.NdefMessage;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
@@ -375,7 +374,7 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
     @Override
     protected void onNfcPushStateChange(boolean enabled) {}
     @Override
-    protected void onNdefPushCompleteMessage() {}
+    protected void onNdefPushCompleteMessage() { Log.d(TAG,"SUCCESFUL PUSH"); }
     @Override
     protected void readEmptyNdefMessage() {}
     @Override

@@ -1,7 +1,5 @@
 package edu.rosehulman.tictactoextreme;
 
-import android.graphics.Point;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;

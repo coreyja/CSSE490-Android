@@ -41,7 +41,8 @@ public class GameRecord extends ExternalTypeRecord {
             data = Game.serialize(this.game);
 
         } catch (Exception e) {
-            Log.d(MainActivity.TAG,"Serializing Game Failed");;
+            Log.d(MainActivity.TAG,"Serializing Game Failed", e);
+
         }
 
         return data;
