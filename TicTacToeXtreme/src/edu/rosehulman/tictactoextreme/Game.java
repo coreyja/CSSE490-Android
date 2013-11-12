@@ -385,6 +385,8 @@ public class Game implements Serializable {
     	}
     }
 
+    /*** Serialization ***/
+
     // When you serialize Game, gameChangeListener must be null so it doesn't attempt to Serialize MainActivity
     // So save the listener first then reset it after the serialization.
     public static byte[] serialize(Game g) throws IOException {

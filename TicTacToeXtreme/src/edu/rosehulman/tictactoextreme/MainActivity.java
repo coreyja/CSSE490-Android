@@ -1,11 +1,12 @@
 package edu.rosehulman.tictactoextreme;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.nfc.NdefMessage;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,11 +22,17 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.ndeftools.Message;
+import org.ndeftools.Record;
+import org.ndeftools.externaltype.GenericExternalTypeRecord;
+import org.ndeftools.util.activity.NfcBeamWriterActivity;
 
 import java.util.Random;
 
-public class MainActivity extends Activity implements OnClickListener, OnGameChangeListener {
+public class MainActivity extends NfcBeamWriterActivity implements OnClickListener, OnGameChangeListener {
 
 
     public static final String TAG = "TTTX"; //TTTX for Tic Tac Toe Xtreme
@@ -46,8 +53,9 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
     // Game object
     private Game game;
 
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -140,11 +148,14 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             buttonRow.addView(temp);
         }
 
+        // Will start detecting NFC actions once onResume() is called.
+        setDetecting(true);
+        this.startPushing();
 
 	}
 
 
-	@Override
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -311,8 +322,8 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         //Creates the mystery buttons in random sections on the board
         for (int i = 0; i < 20; i++){
         	Random mystery_button_randomize = new Random();
-        	int j = mystery_button_randomize.nextInt(8);
-        	int k = mystery_button_randomize.nextInt(8);
+        	int j = mystery_button_randomize.nextInt(9);
+        	int k = mystery_button_randomize.nextInt(9);
         	textViewGrid[j][k].setText(R.string.mystery_buttons);
         }
     }
@@ -350,6 +361,108 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         this.updateColumnButtons();
         this.game.getCurrentPlayer().takeTurn();
     }
+
+    /************************************************** NFC STUFF *******************************************************/
+
+    @Override
+    protected void onNfcStateEnabled() {
+
+    }
+
+    @Override
+    protected void onNfcStateDisabled() {
+
+    }
+
+    @Override
+    protected void onNfcStateChange(boolean enabled) {
+
+    }
+
+    @Override
+    protected void onNfcFeatureNotFound() {
+
+    }
+
+    @Override
+    protected void onNfcPushStateEnabled() {
+        // Do nothing in most of these
+    }
+
+    @Override
+    protected void onNfcPushStateDisabled() {
+        // Do nothing in most of these
+    }
+
+    @Override
+    protected void onNfcPushStateChange(boolean enabled) {
+        // Do nothing in most of these
+    }
+
+    @Override
+    protected void onNdefPushCompleteMessage() {
+        Log.d("TTTX", "Pushed message successfully");
+    }
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+        //TODO: Save game state to NdefMessage
+        Log.d(TAG, "Create message to be beamed");
+
+        // create message to be pushed, for example
+        Message message = new Message();
+
+        // add GameRecord
+        message.add(new GameRecord(this.game));
+
+        // encode to NdefMessage, will be pushed via beam (now!) (unless there is a collision)
+        return message.getNdefMessage();
+    }
+
+    @Override
+    protected void readNdefMessage(Message message) {
+
+        for(int k = 0; k < message.size(); k++) {
+            Record record = message.get(k);
+
+            if (record instanceof GenericExternalTypeRecord){
+                String type = ((GenericExternalTypeRecord) record).getType();
+
+                if (type.equals("gamerecord")){
+                    GameRecord gameRecord = GameRecord.parse(record.getNdefRecord());
+
+                    Game g = gameRecord.getGame();
+                    if (g == null) {
+                        Log.d(TAG, "Game loaded from NFC is Null");
+                        return;
+                    }
+
+                    g.setGameChangeListener(this);
+
+                    this.game = g;
+                    this.initNewGame();
+
+                    Toast.makeText(this, getString(R.string.game_loaded_nfc), Toast.LENGTH_LONG).show();
+
+                    return;
+                }
+            }
+
+        }
+    }
+
+    @Override
+    protected void readEmptyNdefMessage() {
+        //Do nothing
+    }
+
+    @Override
+    protected void readNonNdefMessage() {
+        // Do nothing
+        Log.d(TAG,"Non-ndef message");
+    }
+
+    /** Private Inner Classes **/
 
     private class NewGameDialog extends DialogFragment {
         @Override
@@ -462,6 +575,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
             return builder.create();
         }
     }
+
 }
 
 
