@@ -1,7 +1,6 @@
 package edu.rosehulman.tictactoextreme;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -32,11 +31,6 @@ public class InitialActivity extends Activity {
     }
 
     private void openHelpDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.help_dialog_title);
-        builder.setMessage(R.string.help_dialog_message);
-
-        builder.create().show();
+        new MainActivity.InstructionDialog().show(getFragmentManager(), MainActivity.TAG);
     }
 }

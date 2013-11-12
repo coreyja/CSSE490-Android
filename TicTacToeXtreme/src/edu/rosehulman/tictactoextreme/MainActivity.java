@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.nfc.NdefMessage;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
@@ -51,11 +52,18 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
     // Game object
     private Game game;
 
+    //Sound Effects
+    private MediaPlayer beginningMusic;
+    private MediaPlayer victorySoundbit;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        beginningMusic = MediaPlayer.create(getApplication(), R.raw.starter);
+        beginningMusic.start();
 
         game = new Game(this);
 
@@ -153,7 +161,7 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                 return true;
             case R.id.action_help:
                 //Open the help dialog
-                this.openHelpDialog();
+                this.openInstructionsDialog();
 
                 return true;
         }
@@ -240,6 +248,9 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         // TODO: Actually do something more helpful. Gradually getting better. Probably good right now
         String winnerName = winner.getName();
         String result = String.format("%s won!", winnerName);
+        beginningMusic.stop();
+        victorySoundbit = MediaPlayer.create(getApplication(), R.raw.victory);
+        victorySoundbit.start();
 
         // Disable all the buttons
         for (ImageButton b : columnButtons){
@@ -338,14 +349,9 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         }
     }
 
-    private void openHelpDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.help_dialog_title);
-        builder.setMessage(R.string.help_dialog_message);
-
-        builder.create().show();
-    }
+	private void openInstructionsDialog() {
+		new InstructionDialog().show(getFragmentManager(), TAG);		
+	}
 
     private void openNewGameDialog() {
         new NewGameDialog().show(getFragmentManager(), TAG);
@@ -437,7 +443,27 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         }
     }
 
+
+    
     /** Private Inner Classes **/
+    public static class InstructionDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder instructionMessage = new AlertDialog.Builder(getActivity());
+            instructionMessage.setTitle(R.string.instructions_manual);
+            instructionMessage.setIcon(R.drawable.ic_launcher_tic);
+            instructionMessage.setMessage(R.string.instructions_manual);
+            instructionMessage.setPositiveButton(R.string.ok,
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            return instructionMessage.create();
+        }
+    }
 
     private class NewGameDialog extends DialogFragment {
         @Override
