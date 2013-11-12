@@ -13,5 +13,6 @@
     <string name="delete_question">X</string>
     <string name="cancel">Cancel</string>
 
+    <string name="mystery_buttons">\?</string>
 
 </resources>
