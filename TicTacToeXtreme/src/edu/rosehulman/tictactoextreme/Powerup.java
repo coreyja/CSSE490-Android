@@ -26,7 +26,9 @@ public abstract class Powerup implements Serializable{
     // This defaults to the same as the above, so only powerups that need a position need to specify this method.
     public void usePowerup(int row, int col){ this.usePowerup();}
 
-    // Will return a string name for each Powerup type
+    // Will return a string type for each Powerup type
     public abstract String getStringType();
+
+    public abstract String getName();
 
 }

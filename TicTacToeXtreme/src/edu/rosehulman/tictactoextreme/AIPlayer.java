@@ -1,7 +1,5 @@
 package edu.rosehulman.tictactoextreme;
 
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -56,9 +54,7 @@ public class AIPlayer extends Player{
                 return;
             }
 
-            // The AI took a turn so return, and display a Toast
-            // TODO: Remove Toast
-            Toast.makeText((MainActivity)game.getGameChangeListener(), "AI was Random Move", Toast.LENGTH_LONG).show();
+            // The AI took a turn so return
             return;
         }
 

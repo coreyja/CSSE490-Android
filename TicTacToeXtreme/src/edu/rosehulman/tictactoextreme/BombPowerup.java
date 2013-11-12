@@ -39,4 +39,9 @@ public class BombPowerup extends Powerup {
     public String getStringType() {
         return "Bomb";
     }
+
+    @Override
+    public String getName() {
+        return "Bomb Powerup";
+    }
 }

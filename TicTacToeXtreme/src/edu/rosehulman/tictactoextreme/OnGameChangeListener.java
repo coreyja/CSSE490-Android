@@ -19,4 +19,8 @@ public interface OnGameChangeListener {
     // Will be called when a human player plays a powerup and is waiting on the position before it is used.
     public void onPowerupWaitingForPosition(Powerup powerup);
 
+    // Will display on Toast message on the UI
+    public void onGameNotification(String data);
+    public void onGameNotification(int stringId, Object... args);
+
 }

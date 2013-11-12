@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Created by coreyja on 10/27/13.
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 public class Game implements Serializable {
 
     public static final char DEFAULT_CHARACTER = '\u0000';
+    public static final char MYSTERY_CHARACTER = '?';
 
     // Use a queue to keep track of players, and whos turn is next.
     // When a player takes their turn, pop them off the queue and insert them at the end.
@@ -55,6 +57,15 @@ public class Game implements Serializable {
         // Most likely inited to 0, but to make sure.
         // Also, Arrays.fill is most likely not anymore efficient than a loop, but could be optimized somehow internally
         Arrays.fill(colHeight, 0);
+
+        //Creates the mystery buttons in random sections on the board
+        for (int i = 0; i < 20; i++){
+            Random mystery_button_randomize = new Random();
+            int j = mystery_button_randomize.nextInt(9);
+            int k = mystery_button_randomize.nextInt(9);
+
+            this.grid[j][k] = MYSTERY_CHARACTER;
+        }
     }
 
     // Add a player to the game.
@@ -249,11 +260,37 @@ public class Game implements Serializable {
 
         char symbol = p.getSymbol();
 
+
+
         // Set the row based off the column height and the max columns
         int row = this.grid.length - this.getColumnHeight(col) -1;
 
         // Increment height pointer
         this.incrementColumnHeight(col);
+
+        // If the space we are taking is a Mystery cell, get a random powerup
+        if (isMysteryCell(row, col)){
+            Random r = new Random();
+
+            Powerup powerup = null;
+
+            int rand = r.nextInt(3); // 3 different powerups
+            switch (rand){
+                case 0:
+                    powerup = new BombPowerup(this, p);
+                    break;
+                case 1:
+                    powerup = new ReversalPowerUp(this, p);
+                    break;
+                case 2:
+                    powerup = new TwoTurnsPowerup(this, p);
+                    break;
+            }
+
+            p.addPowerup(powerup);
+
+            this.gameChangeListener.onGameNotification(R.string.powerup_toast, p.getName(), powerup.getName());
+        }
 
         // Set the symbol to that of this player
         this.setSymbolAtPosition(row, col, symbol);
@@ -262,6 +299,10 @@ public class Game implements Serializable {
         //Check if there is a winner from this play
         this.checkForWinner();
 
+    }
+
+    public boolean isMysteryCell(int row, int col){
+        return this.grid[row][col] == MYSTERY_CHARACTER;
     }
 
     public void checkForWinner() {

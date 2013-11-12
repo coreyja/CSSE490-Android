@@ -16,4 +16,6 @@
     <string name="mystery_buttons">\?</string>
     <string name="game_loaded_nfc">Game loaded from NFC</string>
 
+    <string name="powerup_toast" formatted="true">%1$s picked up a %2$s</string>
+
 </resources>

@@ -10,6 +10,8 @@ import org.ndeftools.externaltype.ExternalTypeRecord;
  */
 public class GameRecord extends ExternalTypeRecord {
 
+    public static final String TYPE = "GameRecord";
+
     // The game object we are trying to save
     private Game game;
 
@@ -24,7 +26,7 @@ public class GameRecord extends ExternalTypeRecord {
 
     @Override
     public String getType() {
-        return "GameRecord";
+        return TYPE;
     }
 
     public Game getGame() {
@@ -39,7 +41,7 @@ public class GameRecord extends ExternalTypeRecord {
             data = Game.serialize(this.game);
 
         } catch (Exception e) {
-            Log.d(MainActivity.TAG,"WELL FUCK, Serialize Failed");;
+            Log.d(MainActivity.TAG,"Serializing Game Failed");;
         }
 
         return data;
@@ -53,7 +55,7 @@ public class GameRecord extends ExternalTypeRecord {
         try {
             g = Game.deserialize(generic.getData());
         } catch (Exception e){
-            Log.d(MainActivity.TAG,"WELL SHIT, DeSerialize Failed");
+            Log.d(MainActivity.TAG,"DeSerialize Game Failed");
         }
 
         return new GameRecord(g);

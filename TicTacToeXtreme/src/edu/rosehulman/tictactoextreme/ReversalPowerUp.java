@@ -1,7 +1,5 @@
 package edu.rosehulman.tictactoextreme;
 
-import android.content.Context;
-
 public class ReversalPowerUp extends Powerup {
 
 	public ReversalPowerUp(Game game, Player p) {
@@ -45,5 +43,10 @@ public class ReversalPowerUp extends Powerup {
 		// TODO Auto-generated method stub
 		return "Reversal";
 	}
+
+    @Override
+    public String getName() {
+        return "Reversal Powerup";
+    }
 
 }

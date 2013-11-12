@@ -30,8 +30,6 @@ import org.ndeftools.Record;
 import org.ndeftools.externaltype.GenericExternalTypeRecord;
 import org.ndeftools.util.activity.NfcBeamWriterActivity;
 
-import java.util.Random;
-
 public class MainActivity extends NfcBeamWriterActivity implements OnClickListener, OnGameChangeListener {
 
 
@@ -66,15 +64,6 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         game.addPlayer(a);
         game.addPlayer(b);
 
-        a.addPowerup(new TwoTurnsPowerup(game, a));
-        b.addPowerup(new TwoTurnsPowerup(game, b));
-
-        a.addPowerup(new BombPowerup(game, a));
-        b.addPowerup(new BombPowerup(game, b));
-
-        a.addPowerup(new ReversalPowerUp(game, a));
-        b.addPowerup(new ReversalPowerUp(game, b));
-
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
 
@@ -98,6 +87,9 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
 
             for (int j = 0; j < 9; j++){
                 TextView temp = new TextView(this);
+
+                // Set the text to whatever the game says is in the grid. Basically for the Mystery Cells
+                temp.setText(String.valueOf(this.game.getSymbolFromGrid(i,j)));
                 
 
                 // Set styles for text views
@@ -120,13 +112,6 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                 textViewGrid[i][j] = temp;
                 curRow.addView(temp);
             }
-        }
-        //Creates the mystery buttons in random sections on the board
-        for (int i = 0; i < 20; i++){
-        	Random mystery_button_randomize = new Random();
-        	int j = mystery_button_randomize.nextInt(8);
-        	int k = mystery_button_randomize.nextInt(8);
-        	textViewGrid[j][k].setText(R.string.mystery_buttons);
         }
 
         //Init the column buttons
@@ -274,6 +259,16 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         this.powerupWaitingForPosition = powerup;
     }
 
+    @Override
+    public void onGameNotification(String data){
+        Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGameNotification(int stringId, Object... args){
+        this.onGameNotification(getString(stringId, args));
+    }
+
     private void updatePlayerStatus(){
         String message;
         Player cur = game.getCurrentPlayer();
@@ -319,13 +314,13 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                 this.textViewGrid[i][j].setBackgroundResource(R.color.gridTextViewBackground);
             }
         }
-        //Creates the mystery buttons in random sections on the board
-        for (int i = 0; i < 20; i++){
-        	Random mystery_button_randomize = new Random();
-        	int j = mystery_button_randomize.nextInt(9);
-        	int k = mystery_button_randomize.nextInt(9);
-        	textViewGrid[j][k].setText(R.string.mystery_buttons);
-        }
+//        //Creates the mystery buttons in random sections on the board
+//        for (int i = 0; i < 20; i++){
+//        	Random mystery_button_randomize = new Random();
+//        	int j = mystery_button_randomize.nextInt(9);
+//        	int k = mystery_button_randomize.nextInt(9);
+//        	textViewGrid[j][k].setText(R.string.mystery_buttons);
+//        }
     }
 
     private void updateColumnButtons(){
@@ -364,51 +359,30 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
 
     /************************************************** NFC STUFF *******************************************************/
 
+    // These methods are needed because of my parent class, but I'm not using them so they don't do anything now.
     @Override
-    protected void onNfcStateEnabled() {
-
-    }
-
+    protected void onNfcStateEnabled() {}
     @Override
-    protected void onNfcStateDisabled() {
-
-    }
-
+    protected void onNfcStateDisabled() {}
     @Override
-    protected void onNfcStateChange(boolean enabled) {
-
-    }
-
+    protected void onNfcStateChange(boolean enabled) {}
     @Override
-    protected void onNfcFeatureNotFound() {
-
-    }
-
+    protected void onNfcFeatureNotFound() {}
     @Override
-    protected void onNfcPushStateEnabled() {
-        // Do nothing in most of these
-    }
-
+    protected void onNfcPushStateEnabled() {}
     @Override
-    protected void onNfcPushStateDisabled() {
-        // Do nothing in most of these
-    }
-
+    protected void onNfcPushStateDisabled() {}
     @Override
-    protected void onNfcPushStateChange(boolean enabled) {
-        // Do nothing in most of these
-    }
-
+    protected void onNfcPushStateChange(boolean enabled) {}
     @Override
-    protected void onNdefPushCompleteMessage() {
-        Log.d("TTTX", "Pushed message successfully");
-    }
+    protected void onNdefPushCompleteMessage() {}
+    @Override
+    protected void readEmptyNdefMessage() {}
+    @Override
+    protected void readNonNdefMessage() {}
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        //TODO: Save game state to NdefMessage
-        Log.d(TAG, "Create message to be beamed");
-
         // create message to be pushed, for example
         Message message = new Message();
 
@@ -428,7 +402,7 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
             if (record instanceof GenericExternalTypeRecord){
                 String type = ((GenericExternalTypeRecord) record).getType();
 
-                if (type.equals("gamerecord")){
+                if (type.equalsIgnoreCase(GameRecord.TYPE)){
                     GameRecord gameRecord = GameRecord.parse(record.getNdefRecord());
 
                     Game g = gameRecord.getGame();
@@ -449,17 +423,6 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
             }
 
         }
-    }
-
-    @Override
-    protected void readEmptyNdefMessage() {
-        //Do nothing
-    }
-
-    @Override
-    protected void readNonNdefMessage() {
-        // Do nothing
-        Log.d(TAG,"Non-ndef message");
     }
 
     /** Private Inner Classes **/
@@ -503,12 +466,11 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                         String symbolString = ((EditText)player.findViewById(R.id.player_symbol_field)).getText().toString();
 
 
-                        char symbol;
-                        if (symbolString.length() > 0){
+                        // Default to a letter depending on i
+                        char symbol = (char)('A' + i);
+                        // If one wasn't supplied, or they tried to use the question mark use the default
+                        if (symbolString.length() > 0 && symbolString.charAt(0) != Game.MYSTERY_CHARACTER){
                             symbol = symbolString.charAt(0);
-                        } else {
-                            // Default to X
-                            symbol = (char)('A' + i);
                         }
 
                         // Default to Player # if name not provided
