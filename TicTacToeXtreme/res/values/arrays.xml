@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="player_types">
+        <item>Human</item>
+        <item>Easy AI</item>
+        <item>Medium AI</item>
+        <item>Hard AI</item>
+    </string-array>
+</resources>

@@ -3,7 +3,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
 
@@ -16,29 +16,25 @@
         android:layout_weight="2"
         android:editable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:lines="1" />
 
     <EditText
         android:id="@+id/player_symbol_field"
-
         android:hint="@string/player_symbol_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
         android:editable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:maxLength="1" />
 
-    <ToggleButton
-        android:id="@+id/player_human_toggle"
 
-        android:textOff="@string/human"
-        android:textOn="@string/computer"
-
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_weight="2" />
+        android:id="@+id/spinner"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/delete_player_button"
@@ -48,7 +44,6 @@
 
         android:text="@string/delete_question"
         android:textColor="@color/red"
-        android:layout_weight="1"
          />
 
 </LinearLayout>

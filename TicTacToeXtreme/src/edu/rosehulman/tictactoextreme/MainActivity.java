@@ -14,15 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import org.ndeftools.Message;
 import org.ndeftools.Record;
@@ -489,16 +490,18 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                             name = String.format("Player %d", i+1);
                         }
 
-                        boolean isComputer = ((ToggleButton)player.findViewById(R.id.player_human_toggle)).isChecked();
+                        String playerType = ((Spinner)player.findViewById(R.id.spinner)).getSelectedItem().toString();
 
-                        // Create player based on whether they are human or not
-                        if (!isComputer){
-                            // Not a computer so create the human player
+                        if (playerType.equals("Human")){
                             game.addPlayer(new HumanPlayer(game, name, symbol));
-                        } else {
-                            // Is a computer, so create an AI Player
-                            game.addPlayer(new AIPlayer(game, name, symbol));
+                        } else if (playerType.equals("Easy AI")){
+                            game.addPlayer(new AIPlayer(game, name, symbol, 0.5));
+                        } else if (playerType.equals("Medium AI")){
+                            game.addPlayer(new AIPlayer(game, name, symbol, 0.8));
+                        } else if (playerType.equals("Hard AI")){
+                            game.addPlayer(new AIPlayer(game, name, symbol, 1.0));
                         }
+
                     }
 
                     // After creating new Game with new players refresh the Grid and the player status. All in one func now
@@ -520,6 +523,13 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
                         // Inflate the view with the player info fields and add that to the playerContainer
                         LayoutInflater inflater = getActivity().getLayoutInflater();
                         View newPlayer = inflater.inflate(R.layout.new_player_info, null);
+
+                        // Set up the Spinner for choosing Player type
+                        Spinner spinner = (Spinner)newPlayer.findViewById(R.id.spinner);
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(MainActivity.this, R.array.player_types, android.R.layout.simple_spinner_item);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapter);
+
 
                         // Set onClickListener for delete button of each player
                         ((Button) newPlayer.findViewById(R.id.delete_player_button)).setOnClickListener(new OnClickListener() {
