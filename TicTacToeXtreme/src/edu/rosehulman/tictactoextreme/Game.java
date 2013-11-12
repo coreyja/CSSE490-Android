@@ -20,6 +20,7 @@ public class Game {
     // Char matrix representing the board.
     // Symbols will depend on the Player's symbol attr
     // Will be used as [row][col]
+    // [0][0] is the UPPER right corner
     private char[][] grid;
 
     // The number of spaces in each col that have been used
@@ -67,6 +68,11 @@ public class Game {
     public Player getCurrentPlayer(){
         // Return the head of the queue, as this is the current Player
         return this.players.peek();
+    }
+
+    public Player[] getPlayers() {
+        // Returns an array of all the players
+        return this.players.toArray(new Player[0]);
     }
 
     public boolean isCurrentPlayerHuman(){

@@ -53,8 +53,8 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         // TODO: Change below to add a way to ask user for number of players
         game = new Game(this);
-        Player a = new HumanPlayer(game, "Player 1", 'X');
-        Player b = new HumanPlayer(game, "Player 2", 'O');
+        Player a = new HumanPlayer(game, "A", 'A');
+        Player b = new AIPlayer(game, "B", 'B');
         game.addPlayer(a);
         game.addPlayer(b);
 
@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
         b.addPowerup(new BombPowerup(game, b));
 
         a.addPowerup(new ReversalPowerUp(game, a));
+        b.addPowerup(new ReversalPowerUp(game, b));
 
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
