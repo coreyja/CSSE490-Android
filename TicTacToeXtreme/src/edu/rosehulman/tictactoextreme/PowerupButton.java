@@ -23,9 +23,10 @@ public class PowerupButton extends ImageButton {
 
         if (type == "Bomb"){
             this.setImageResource(R.drawable.bomb_powerup);
-        }
-        if (type == "2X") {
+        } else if (type == "2X") {
             this.setImageResource(R.drawable.twox_powerup);
+        } else if (type == "Reversal") {
+            this.setImageResource(R.drawable.reversal_powerup);
         }
     }
 }

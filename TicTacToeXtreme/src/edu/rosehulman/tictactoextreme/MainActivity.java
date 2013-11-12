@@ -1,7 +1,5 @@
 package edu.rosehulman.tictactoextreme;
 
-import java.util.Random;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,6 +22,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import java.util.Random;
 
 public class MainActivity extends Activity implements OnClickListener, OnGameChangeListener {
 
@@ -63,6 +63,8 @@ public class MainActivity extends Activity implements OnClickListener, OnGameCha
 
         a.addPowerup(new BombPowerup(game, a));
         b.addPowerup(new BombPowerup(game, b));
+
+        a.addPowerup(new ReversalPowerUp(game, a));
 
         // Find the table
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
