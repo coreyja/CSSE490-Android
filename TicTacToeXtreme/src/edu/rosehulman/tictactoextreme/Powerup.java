@@ -1,9 +1,11 @@
 package edu.rosehulman.tictactoextreme;
 
+import java.io.Serializable;
+
 /**
  * Created by coreyja on 10/28/13.
  */
-public abstract class Powerup {
+public abstract class Powerup implements Serializable{
 
     // Reference to the game object
     protected Game game;

@@ -3,10 +3,12 @@ package edu.rosehulman.tictactoextreme;
 import android.content.Context;
 import android.widget.ImageButton;
 
+import java.io.Serializable;
+
 /**
  * Created by coreyja on 10/28/13.
  */
-public class PowerupButton extends ImageButton {
+public class PowerupButton extends ImageButton implements Serializable{
 
     private Powerup powerup;
 

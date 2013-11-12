@@ -2,13 +2,15 @@ package edu.rosehulman.tictactoextreme;
 
 import android.graphics.Point;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
  * Created by coreyja on 10/27/13.
  */
-public class Game {
+public class Game implements Serializable {
 
     public static final char DEFAULT_CHARACTER = '\u0000';
 
@@ -382,4 +384,24 @@ public class Game {
     		return true;
     	}
     }
+
+    // When you serialize Game, gameChangeListener must be null so it doesn't attempt to Serialize MainActivity
+    // So save the listener first then reset it after the serialization.
+    public static byte[] serialize(Game g) throws IOException {
+        OnGameChangeListener listen = g.gameChangeListener;
+        g.gameChangeListener = null;
+
+        byte[] data = Serializer.serialize(g);
+
+        g.gameChangeListener = listen;
+
+        return data;
+    }
+
+    // Deserializing is easy, just do it.
+    public static Game deserialize(byte[] data) throws IOException, ClassNotFoundException {
+
+        return (Game)Serializer.deserialize(data);
+    }
+
 }

@@ -1,11 +1,12 @@
 package edu.rosehulman.tictactoextreme;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Abstract class that HumanPlayer and AIPlayer will extend
  */
-public abstract class Player {
+public abstract class Player implements Serializable{
 
     protected Game game;
 
