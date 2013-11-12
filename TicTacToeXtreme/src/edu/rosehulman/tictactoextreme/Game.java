@@ -278,7 +278,7 @@ public class Game implements Serializable {
                     powerup = new BombPowerup(this, p);
                     break;
                 case 1:
-                    powerup = new ReversalPowerUp(this, p);
+                    powerup = new SwapPowerUp(this, p);
                     break;
                 case 2:
                     powerup = new TwoTurnsPowerup(this, p);

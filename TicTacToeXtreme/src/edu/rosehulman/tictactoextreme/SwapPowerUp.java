@@ -1,8 +1,8 @@
 package edu.rosehulman.tictactoextreme;
 
-public class ReversalPowerUp extends Powerup {
+public class SwapPowerUp extends Powerup {
 
-	public ReversalPowerUp(Game game, Player p) {
+	public SwapPowerUp(Game game, Player p) {
 		super(game, p);
 		// TODO Auto-generated constructor stub
 	}
@@ -30,7 +30,7 @@ public class ReversalPowerUp extends Powerup {
         // If the cell is occupied as is the one above, simply switch the symbols.
         char temp = this.game.getSymbolFromGrid(row, col);
         this.game.setSymbolAtPosition(row, col, this.game.getSymbolFromGrid(row-1, col));
-        this.game.setSymbolAtPosition(row-1, col, temp);
+        this.game.setSymbolAtPosition(row - 1, col, temp);
 
 
 		// Check for winner since symbols falling could cause someone to win
