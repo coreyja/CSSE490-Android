@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.nfc.NdefMessage;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
@@ -47,7 +48,8 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
 
     private TextView playerStatusText;
     private LinearLayout powerupContainer;
-
+    private MediaPlayer beginningMusic;
+    private MediaPlayer victorySoundbit;
     private Powerup powerupWaitingForPosition = null;
 
     // Game object
@@ -59,8 +61,10 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        // TODO: Change below to add a way to ask user for number of players
+        // TODO: Change below to add a way to ask user for number of player
         game = new Game(this);
+        beginningMusic = MediaPlayer.create(getApplication(), R.raw.starter);
+        beginningMusic.start();
         Player a = new HumanPlayer(game, "A", 'A');
         Player b = new AIPlayer(game, "B", 'B');
         game.addPlayer(a);
@@ -169,12 +173,15 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
             case R.id.action_new_game:
                 // Open the new game dialog to select num and type of players
                 this.openNewGameDialog();
-
                 return true;
+            case R.id.instructions:
+            	this.openInstructionsDialog();
+            	return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 	@Override
 	public void onClick(View v) {
@@ -255,6 +262,9 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         // TODO: Actually do something more helpful. Gradually getting better. Probably good right now
         String winnerName = winner.getName();
         String result = String.format("%s won!", winnerName);
+        beginningMusic.stop();
+        victorySoundbit = MediaPlayer.create(getApplication(), R.raw.victory);
+        victorySoundbit.start();
 
         // Disable all the buttons
         for (ImageButton b : columnButtons){
@@ -339,6 +349,10 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
             }
         }
     }
+    
+	private void openInstructionsDialog() {
+		new InstructionDialog().show(getFragmentManager(), TAG);		
+	}
 
     private void openNewGameDialog() {
         new NewGameDialog().show(getFragmentManager(), TAG);
@@ -461,7 +475,25 @@ public class MainActivity extends NfcBeamWriterActivity implements OnClickListen
         // Do nothing
         Log.d(TAG,"Non-ndef message");
     }
+    private class InstructionDialog extends DialogFragment {
+    	@Override 
+    	public Dialog onCreateDialog(Bundle savedInstanceState) {
+    		AlertDialog.Builder instructionMessage = new AlertDialog.Builder(getActivity());
+    		instructionMessage.setTitle(R.string.instructions_manual);
+    		instructionMessage.setIcon(R.drawable.ic_launcher_tic);
+    		instructionMessage.setMessage(R.string.instructions);
+    		instructionMessage.setPositiveButton(R.string.ok,
+    				new DialogInterface.OnClickListener() {
 
+    					@Override
+    					public void onClick(DialogInterface dialog, int which) {
+    						dialog.dismiss();
+    					}
+    				});
+    		return instructionMessage.create();
+    	}
+    }
+    
     /** Private Inner Classes **/
 
     private class NewGameDialog extends DialogFragment {

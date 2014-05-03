@@ -12,8 +12,10 @@
     <string name="computer">Computer</string>
     <string name="delete_question">X</string>
     <string name="cancel">Cancel</string>
-
+	<string name="instructions">Instructions</string>
     <string name="mystery_buttons">\?</string>
     <string name="game_loaded_nfc">Game loaded from NFC</string>
-
+    <string name="Instruction_title">TicTacToeExtreme Help</string>
+    <string name="ok">OK</string>
+	<string name="instructions_manual">In TicTacToeXtreme, the player needs to get three of his pieces in a row, diagonal, and column. On the board, there are mystery boxes with the label /? that can be picked up by each player. Once a player lands a piece on one of those mystery boxes, the player gets a random power-up. The power-ups are 2x, reversal, and bomb. Bomb gets rid of all pieces in a  one radius area and causes the other pieces to fall down. 2x lets the player take two turns. The reversal switches the selected piece with another piece. The pieces must be placed going from bottom to top vertically. If a player gets three pieces to match, then that play WINS! Otherwise, it\'s a CAT! There can be up to three players per game.</string>
 </resources>
